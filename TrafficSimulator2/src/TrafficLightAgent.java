@@ -1,0 +1,136 @@
+
+public class TrafficLightAgent {
+
+	TrafficLight pairedLight;
+	Lane pairedLane;
+	
+	Lane lane;
+	String name;
+	
+	
+	//basic rules for the lanes to follow
+	
+	//if pair light is green then also turn green
+	public LightColor switchToGreen( Lane lane, Lane pairedLane) {
+		System.out.println("TrafficLightAgent/switchToGreen initiated");
+
+		if (pairedLane.equals(null)) {
+			System.out.println("TrafficLightAgent/switchToGreen no light paired");
+			return null;
+		}
+		//if light is currently red and the paired light is green then switch
+		System.out.println("TrafficLightAgent/switchToGreen current light color: " + lane.laneLight.getCurrentColor());
+
+		if (lane.laneLight.getCurrentColor().equals(LightColor.red)) {
+			System.out.println("TrafficLightAgent/switchToGreen current light color: " + lane.laneLight.getCurrentColor());
+			//**System.out.println("TrafficLightAgent/switchToGreen paired light color: " + pairedLight.lightName + " "+ pairedLight.currentColor);
+			System.out.println("TrafficLightAgent/switchToGreen paired light color: " + pairedLane.laneLight.lightName + " "+ pairedLane.laneLight.currentColor);
+
+			
+			//if(pairedLight.currentColor.equals(LightColor.green)) {
+			if(pairedLane.laneLight.currentColor.equals(LightColor.green)) {	
+				System.out.println("TrafficLightAgent/switchToGreen pair light is green switch to green too");
+				lane.laneLight.setCurrentColor(LightColor.green);
+				//System.out.println("TrafficLightAgent/switchToGreen "+lane.laneLight.getCurrentColor() + " : " + pairedLight.getCurrentColor() );	
+				System.out.println("TrafficLightAgent/switchToGreen "+lane.laneLight.getCurrentColor() + " : " + pairedLane.laneLight.getCurrentColor() );	
+
+			}else {
+				return lane.laneLight.getCurrentColor();
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	//if green and size is 0 then turn yellow
+	
+	
+	
+	
+	
+	//logic for switching light colors
+	//uses a finitie state machine with colors bing the states
+	public LightColor lightNextColor (Lane lane) {
+		//if a light is yellow then it turns red next
+		if (lane.laneLight.currentColor.equals(LightColor.yellow)){
+				System.out.println(lane.laneName +": had a current color of " + lane.laneLight.currentColor);
+			lane.laneLight.setCurrentColor(LightColor.red);
+				System.out.println(lane.laneName +": has a current color of " + lane.laneLight.currentColor);
+			return lane.laneLight.currentColor;
+			//if a light is red then it turns green
+		}else if (lane.laneLight.currentColor.equals(LightColor.red)){
+				System.out.println(lane.laneName +": had a current color of " + lane.laneLight.currentColor);
+			lane.laneLight.currentColor = LightColor.green;
+				System.out.println(lane.laneName +": has a current color of " + lane.laneLight.currentColor);
+			return lane.laneLight.currentColor;
+			//if a light is green then it turns yellow
+		}else if (lane.laneLight.currentColor.equals(LightColor.green)){
+				System.out.println(lane.laneName +": had a current color of " + lane.laneLight.currentColor);
+			lane.laneLight.currentColor = LightColor.yellow;
+				System.out.println(lane.laneName +": now has a current color of " + lane.laneLight.currentColor);
+
+			return lane.laneLight.currentColor;}
+			System.out.println("light change failed");
+		return null;
+	}
+	
+	
+	
+	
+	
+	public TrafficLightAgent (Lane assignedLane, String laneName) {
+		lane = assignedLane;
+		name = laneName+"_TrafficLightAgent";
+		System.out.println(name + ": agent created");
+	}
+
+
+
+	public TrafficLight getPairedLight() {
+		return pairedLight;
+	}
+
+
+
+	public void setPairedLight(TrafficLight pairedLight) {
+		this.pairedLight = pairedLight;
+	}
+
+
+
+	public Lane getLane() {
+		return lane;
+	}
+
+
+
+	public void setLane(Lane lane) {
+		this.lane = lane;
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	public Lane getPairedLane() {
+		return pairedLane;
+	}
+
+
+
+	public void setPairedLane(Lane pairedLane) {
+		this.pairedLane = pairedLane;
+	}
+	
+}
