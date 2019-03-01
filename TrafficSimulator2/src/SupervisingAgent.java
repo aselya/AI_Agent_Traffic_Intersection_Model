@@ -25,6 +25,8 @@ public class SupervisingAgent {
 		System.out.println("SupervisingAgent/switchToGreen test");
 		trafficLightAgentsArray[0].switchToGreen(trafficLightAgentsArray[0].lane, trafficLightAgentsArray[0].pairedLane);
 	
+		trafficLightAgentsArray[0].lane.laneLight.setCurrentColor(LightColor.green);
+		trafficLightAgentsArray[0].greenToYellowWhenNotBusy(trafficLightAgentsArray[0].lane);
 	}
 	
 	

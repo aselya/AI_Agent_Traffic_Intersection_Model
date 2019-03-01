@@ -10,6 +10,27 @@ public class TrafficLightAgent {
 	
 	//basic rules for the lanes to follow
 	
+	
+	//if green and queue < 3 switch to yellow
+	public LightColor greenToYellowWhenNotBusy(Lane lane) {
+			
+		System.out.println("LightColor greenToYellowWhenNotBusy/lane.laneLight.currentColor.equals" + lane.laneLight.currentColor);
+		if (lane.laneLight.currentColor.equals(LightColor.green)) {
+			System.out.println("LightColor greenToYellowWhenNotBusy/lane.laneQueue.size()" + lane.laneQueue.size());
+			if (lane.laneQueue.size() < 3) {
+				lane.laneLight.setCurrentColor(LightColor.yellow);
+				System.out.println("NEW LightColor greenToYellowWhenNotBusy/lane.laneLight.currentColor.equals" + lane.laneLight.currentColor);
+				return LightColor.yellow;
+			}else {
+				System.out.println("LightColor greenToYellowWhenNotBusy/lane.laneQueue.size()" + lane.laneQueue.size() +"to busy to auto change");
+				return LightColor.green;
+			}
+		}else {
+			System.out.println("LightColor greenToYellowWhenNotBusy/ lane not green");
+			}
+		return null;
+	}
+	
 	//if pair light is green then also turn green
 	public LightColor switchToGreen( Lane lane, Lane pairedLane) {
 		System.out.println("TrafficLightAgent/switchToGreen initiated");
