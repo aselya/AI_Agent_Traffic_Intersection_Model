@@ -11,6 +11,22 @@ public class TrafficLightAgent {
 	//basic rules for the lanes to follow
 	
 	
+	
+	//if yellow then go red
+	public LightColor YellowToRed(Lane lane) {
+		System.out.println("LightColor YellowToRed/lane.laneLight.currentColor.equals" + lane.laneLight.currentColor);
+		if(lane.laneLight.currentColor.equals(LightColor.yellow)) {
+			System.out.println("LightColor YellowToRed/lane.laneLight.currentColor.equals" + lane.laneLight.currentColor);
+
+			lane.laneLight.setCurrentColor(LightColor.red);
+			return LightColor.red;
+		}else {
+			System.out.println("YellowToRed: selected lane light is not yellow");
+		}
+		return null;
+		
+	}	
+	
 	//if green and queue < 3 switch to yellow
 	public LightColor greenToYellowWhenNotBusy(Lane lane) {
 			
