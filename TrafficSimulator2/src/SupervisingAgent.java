@@ -37,11 +37,13 @@ public class SupervisingAgent {
 		buildTrafficLightAgents (intersectionLanes);
 		AssignPairs(trafficLightAgentsArray);
 		
-		trafficLightAgentsArray[3].lane.laneLight.setCurrentColor(LightColor.green);
+		/*trafficLightAgentsArray[3].lane.laneLight.setCurrentColor(LightColor.green);
 		trafficLightAgentsArray[2].lane.laneLight.setCurrentColor(LightColor.green);
 		trafficLightAgentsArray[1].lane.laneLight.setCurrentColor(LightColor.green);
 		trafficLightAgentsArray[0].lane.laneLight.setCurrentColor(LightColor.green);
 		System.out.println("SupervisingAgent/switchToGreen test");
+		
+		*/
 		//trafficLightAgentsArray[0].swtichToGreenWhenPairedLightIsGreen(trafficLightAgentsArray[0].lane, trafficLightAgentsArray[0].pairedLane);
 	
 		//trafficLightAgentsArray[0].lane.laneLight.setCurrentColor(LightColor.green);
@@ -56,18 +58,61 @@ public class SupervisingAgent {
 			}
 		}
 		*/
+		setDefaultLaneColors ();
 		standardTurnMethods ();
 	}
 	
 	
 	
+	public double calculateWaitTimeValuesForLanePairs() {
+		int  index= 0;
+		int maxFirstLaneIndex = 0;
+		double max = 0;
+		
+		for (int i = 0; i < currentIntersection.intersectionLanes.length; i ++) {
+			System.out.println("paired value of wait time: "+currentIntersection.intersectionLanes[i].calculateWaitTimeValue(time) + currentIntersection.intersectionLanes[i+1].calculateWaitTimeValue(time));
+		if ( max < currentIntersection.intersectionLanes[i].calculateWaitTimeValue(time) + currentIntersection.intersectionLanes[i+1].calculateWaitTimeValue(time)) {
+			max = currentIntersection.intersectionLanes[i].calculateWaitTimeValue(time) + currentIntersection.intersectionLanes[i+1].calculateWaitTimeValue(time);
+			System.out.println("new max wait time pair value: " + max);
+			maxFirstLaneIndex = i;
+			i ++; //goes to next pair
+		} else {
+			i++;//goes to next pair
+		}
+		}
+	 return maxFirstLaneIndex;
+	}
+	
+	
+	public void setDefaultLaneColors () {
+		
+		trafficLightAgentsArray[3].lane.laneLight.setCurrentColor(LightColor.green);
+		trafficLightAgentsArray[2].lane.laneLight.setCurrentColor(LightColor.green);
+		trafficLightAgentsArray[1].lane.laneLight.setCurrentColor(LightColor.red);
+		trafficLightAgentsArray[0].lane.laneLight.setCurrentColor(LightColor.red);
+			System.out.println("default lane colors set");
+	}
 	
 	public void standardTurnMethods () {
+		time ++;
+		//makes sure that all lanes are matched and if so reduces
+		//lanes with green light queues
 		if (allPairedLightsMatch() == true) {
 		reduceTrafficInGreenLightLanes();
 		}
 		
-		
+		intersectionStatusPrint();
+		calculateWaitTimeValuesForLanePairs();
+	}
+	
+	
+	public void intersectionStatusPrint() {
+		System.out.println("INTERSECTION STATUS\n\n");
+		for (int i = 0; i < currentIntersection.intersectionLanes.length; i++) {
+			System.out.println("Lane Name: "+currentIntersection.intersectionLanes[i].laneName);
+			System.out.println("Lane color: "+currentIntersection.intersectionLanes[i].laneLight.getCurrentColor());
+			System.out.println("Lane size: "+currentIntersection.intersectionLanes[i].getLaneQueue().size()+"\n");
+		}
 		
 	}
 	
