@@ -8,7 +8,34 @@ public class TrafficLightAgent {
 	String name;
 	
 	
-	//basic rules for the lanes to follow
+	
+	/*AI functions that traffic light agent needs to have
+	 * When lane is empty/low and light is green, switch to yellow
+	 *      greenToYellowWhenNotBusy(Lane lane)
+	 * When light is a yellow, switch to red, red -> green, green -> yellow
+	 * 		lightNextColor (Lane lane) 
+	 * When paired light is green, switch to green too
+	 * 		swtichToGreenWhenPairedLightIsGreen( Lane lane, Lane pairedLane)
+	 * Control Flow loop to make sure everything above is implimented
+	*/
+	
+	
+	public void controlFlow() {
+		boolean actionTaken = false;
+		if (swtichToGreenWhenPairedLightIsGreen( lane, pairedLane) != null) {
+			System.out.println("matching paired light ");
+			actionTaken = true;
+			}else {
+				System.out.println("paired light did not initiate switch to green");
+				actionTaken = false;
+			}
+		
+		if(actionTaken == false) {
+			System.out.println("checking to see if the lane is busy: greenToYellowWhenNotBusy");
+			greenToYellowWhenNotBusy(lane);
+		}
+		
+	}
 	
 	
 	
@@ -48,7 +75,7 @@ public class TrafficLightAgent {
 	}
 	
 	//if pair light is green then also turn green
-	public LightColor switchToGreen( Lane lane, Lane pairedLane) {
+	public LightColor swtichToGreenWhenPairedLightIsGreen( Lane lane, Lane pairedLane) {
 		System.out.println("TrafficLightAgent/switchToGreen initiated");
 
 		if (pairedLane.equals(null)) {
@@ -70,17 +97,15 @@ public class TrafficLightAgent {
 				lane.laneLight.setCurrentColor(LightColor.green);
 				//System.out.println("TrafficLightAgent/switchToGreen "+lane.laneLight.getCurrentColor() + " : " + pairedLight.getCurrentColor() );	
 				System.out.println("TrafficLightAgent/switchToGreen "+lane.laneLight.getCurrentColor() + " : " + pairedLane.laneLight.getCurrentColor() );	
-
-			}else {
 				return lane.laneLight.getCurrentColor();
 			}
 		}
+		System.out.println("swtichToGreen/ returning null");
 		return null;
 	}
 	
 	
 	
-	//if green and size is 0 then turn yellow
 	
 	
 	

@@ -10,7 +10,7 @@ public class Driver {
 		// TODO Auto-generated method stub
 		IntersectionQueues map = new IntersectionQueues();
 		
-		for (int i = 0; i < 10; i ++) {
+		for (int i = 0; i < 30; i ++) {
 			map.addTrafficToRandomLane(map.intersectionLanes );
 		}
 		
@@ -19,7 +19,7 @@ public class Driver {
 		map.IntersectionToString(map.intersectionLanes);
 		
 		
-		SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes);
+		SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
 		System.out.println(supAgent.intersectionLanes.toString());
 	}
 
