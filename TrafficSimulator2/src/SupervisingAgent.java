@@ -73,9 +73,21 @@ public class SupervisingAgent {
 			if (currentIntersection.intersectionLanes[calculateWaitTimeValuesForLanePairs()].laneLight.currentColor == LightColor.green) {
 				reduceTrafficInGreenLightLanes();
 			}else {
-				if(trafficLightAgentsArray[calculateWaitTimeValuesForLanePairs()].crossLane.laneLight.equals(LightColor.green)) {
-					//make cross light lane go to next color, yellow
-					trafficLightAgentsArray[calculateWaitTimeValuesForLanePairs()].lightNextColor(trafficLightAgentsArray[calculateWaitTimeValuesForLanePairs()].crossLane);
+				Lane currentCrossLane = intersectionLanes[calculateWaitTimeValuesForLanePairs()].laneAgent.crossLane;
+				TrafficLight currentCrossLanePairedLight = currentCrossLane.laneAgent.pairedLight;
+				
+				if(currentCrossLane.laneLight.equals(LightColor.green)) {
+					if(currentCrossLanePairedLight.equals(LightColor.green) || currentCrossLanePairedLight.equals(LightColor.yellow) ) {
+						currentCrossLanePairedLight.setCurrentColor(LightColor.yellow);
+						currentCrossLane.laneLight.setCurrentColor(LightColor.yellow);
+					}
+				}else if(currentCrossLane.laneLight.equals(LightColor.yellow)){
+					if(currentCrossLanePairedLight.equals(LightColor.green)) {
+						currentCrossLanePairedLight.setCurrentColor(LightColor.yellow);
+					}
+					
+					
+					intersectionLanes[calculateWaitTimeValuesForLanePairs()].laneAgent.lightNextColor(trafficLightAgentsArray[calculateWaitTimeValuesForLanePairs()].crossLane);
 					
 				}
 			}
@@ -105,7 +117,15 @@ public class SupervisingAgent {
 	}
 	
 	
-	
+	public void makeAllyellowLightsRed(Lane intersectionLanes[]) {
+		for(int i = 0; i < intersectionLanes.length; i ++) {
+			if (intersectionLanes[i].laneLight.currentColor.equals(LightColor.yellow)){
+				intersectionLanes[i].laneLight.setCurrentColor(LightColor.red);
+			}
+		}
+		
+		
+	}
 	
 	public int calculateWaitTimeValuesForLanePairs() {
 		int  index= 0;
