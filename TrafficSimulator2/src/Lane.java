@@ -6,6 +6,7 @@ public class Lane {
 	Queue<Vehicle> laneQueue = new LinkedList<>();
 	double waitTimeValue = 0;
 	TrafficLight laneLight;
+	TrafficLightAgent laneAgent;
 	
 	
 	
@@ -21,7 +22,9 @@ public class Lane {
 			return waitTimeValue = 0;
 		}
 		//takes the arrivial time of first car squares it and divides by the number of cars
-		waitTimeValue = Math.pow((currentTime - laneQueue.peek().arrivalTime) , 2)/laneQueue.size();
+		//waitTimeValue = Math.pow((currentTime - laneQueue.peek().arrivalTime) , 2)/laneQueue.size();
+		
+		waitTimeValue = laneQueue.size();
 		
 		return waitTimeValue;
 		
@@ -55,6 +58,26 @@ public class Lane {
 
 	public void setWaitTimeValue(double waitTimeValue) {
 		this.waitTimeValue = waitTimeValue;
+	}
+
+
+	public TrafficLight getLaneLight() {
+		return laneLight;
+	}
+
+
+	public void setLaneLight(TrafficLight laneLight) {
+		this.laneLight = laneLight;
+	}
+
+
+	public TrafficLightAgent getLaneAgent() {
+		return laneAgent;
+	}
+
+
+	public void setLaneAgent(TrafficLightAgent laneAgent) {
+		this.laneAgent = laneAgent;
 	}
 	
 }

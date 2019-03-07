@@ -3,7 +3,8 @@ public class TrafficLightAgent {
 
 	TrafficLight pairedLight;
 	Lane pairedLane;
-	
+	Lane crossLane;
+	Lane crossLane2;
 	Lane lane;
 	String name;
 	
@@ -145,6 +146,30 @@ public class TrafficLightAgent {
 		lane = assignedLane;
 		name = laneName+"_TrafficLightAgent";
 		System.out.println(name + ": agent created");
+	}
+
+
+
+	public Lane getCrossLane() {
+		return crossLane;
+	}
+
+
+
+	public void setCrossLane(Lane crossLane) {
+		this.crossLane = crossLane;
+	}
+
+
+
+	public Lane getCrossLane2() {
+		return crossLane2;
+	}
+
+
+
+	public void setCrossLane2(Lane crossLane2) {
+		this.crossLane2 = crossLane2;
 	}
 
 

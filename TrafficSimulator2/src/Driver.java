@@ -20,7 +20,7 @@ public class Driver {
 		
 		
 		SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
-		System.out.println(supAgent.intersectionLanes.toString());
+		//System.out.println(supAgent.intersectionLanes.toString());
 	}
 
 	
