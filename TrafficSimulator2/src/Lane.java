@@ -8,6 +8,7 @@ public class Lane {
 	TrafficLight laneLight;
 	TrafficLightAgent laneAgent;
 	Boolean actionTakenThisTurn = false;
+	boolean lightChangedThisTurn =false;
 	
 	
 	
