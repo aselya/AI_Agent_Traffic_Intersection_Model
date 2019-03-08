@@ -7,6 +7,7 @@ public class Lane {
 	double waitTimeValue = 0;
 	TrafficLight laneLight;
 	TrafficLightAgent laneAgent;
+	Boolean actionTakenThisTurn = false;
 	
 	
 	
@@ -78,6 +79,16 @@ public class Lane {
 
 	public void setLaneAgent(TrafficLightAgent laneAgent) {
 		this.laneAgent = laneAgent;
+	}
+
+
+	public Boolean getActionTakenThisTurn() {
+		return actionTakenThisTurn;
+	}
+
+
+	public void setActionTakenThisTurn(Boolean actionTakenThisTurn) {
+		this.actionTakenThisTurn = actionTakenThisTurn;
 	}
 	
 }
