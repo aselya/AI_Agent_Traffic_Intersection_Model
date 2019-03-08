@@ -2,6 +2,20 @@
 public class SupervisingAgent {
 
 	
+	/*
+	 * first find lane pair with most traffic
+	 * 		if that is green do nothing and move to next turn
+	 * if it isn't green
+	 * 		find if cross lanes are red
+	 * 			if red and lanes with most traffic are red go green
+	 * 		find if cross lanes are green
+	 * 			if green turn them yellow
+	 * 				skip to next cycle
+	 * 		find if cross lanes are yellow
+	 * 			if yellow make them turn red
+	 * 				make most traffic red
+	 */
+	
 	/*AI functions that supervising agent needs to have
 	 * 
 	 * start system timer and turn system
