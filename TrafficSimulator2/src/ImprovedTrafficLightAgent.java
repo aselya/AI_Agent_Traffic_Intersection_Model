@@ -51,7 +51,7 @@ public class ImprovedTrafficLightAgent {
 	
 	
 	public boolean changeBasedOnPreviousSupervisisorActions() {
-		
+		return true;
 	}
 	
 	
@@ -94,4 +94,4 @@ public class ImprovedTrafficLightAgent {
 	
 	
 	
-}
+
