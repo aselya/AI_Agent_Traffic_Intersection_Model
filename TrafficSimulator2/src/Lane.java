@@ -7,6 +7,7 @@ public class Lane {
 	double waitTimeValue = 0;
 	TrafficLight laneLight;
 	TrafficLightAgent laneAgent;
+	FirstOrderLogicAgents firstOrderAgent;
 	Boolean actionTakenThisTurn = false;
 	boolean lightChangedThisTurn =false;
 	

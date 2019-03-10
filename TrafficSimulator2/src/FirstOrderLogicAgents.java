@@ -61,6 +61,9 @@ Lane adjacent2;
 int totalWaitTime;
 int numberOfCars;
 
+public FirstOrderLogicAgents ( Lane lane, Lane across){
+	
+}
 
 
 public void controlFlowLoop() {
