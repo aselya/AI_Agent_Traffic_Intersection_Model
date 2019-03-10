@@ -28,9 +28,9 @@ public class FirstOrderLogicAgents {
  * Rule concerning changing based on waitTime
  * 		If the sum of the wait time for one pair of lanes is greater than another and the first pair is not green and the others are
  * 		The second pair will be changed to yellow
- *  (L_inital(red) ∧ L_across(red)) ∧ (L_adjacent1(Green) ∧ L_adjacent2(Green))
- *  ∧ Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacent1(waitTime) ∧ L_adjacent2(waitTime)) 
- *  ⇒ L_adjacent1(Yellow) ∧ L_adjacent2(Yellow)
+ *  (L_inital(red) ∧ L_across(red)) ∧ (L_adjacentLeft(Green) ∧ L_adjacentRight(Green))
+ *  ∧ Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime)) 
+ *  ⇒ L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)
  * Method that implements these rules:changeBasedOnWaitTime()
  * 
  * Rule concerning changing color when not busy
@@ -56,13 +56,17 @@ public class FirstOrderLogicAgents {
 
 Lane lane;
 Lane across;
-Lane adjacent1;
-Lane adjacent2;
+Lane adjacentLeft;
+Lane adjacentRight;
 int totalWaitTime;
 int numberOfCars;
 
-public FirstOrderLogicAgents ( Lane lane, Lane across){
-	
+public FirstOrderLogicAgents ( Lane lane, Lane across, Lane adjacentLeft, Lane adjacentRight){
+ lane = this.lane;
+ across= this.across;
+ adjacentLeft = this.adjacentLeft;
+ adjacentRight = this.adjacentRight;
+ System.out.println("FO lane agent created");
 }
 
 
@@ -133,17 +137,17 @@ public boolean changeToYellowWhenNotBusy() {
 public boolean changeBasedOnWaitTime() {
 	//(L_inital(red) ∧ L_across(red))
 	if(lane.laneLight.currentColor.equals(LightColor.red)&&(across.laneLight.currentColor.equals(LightColor.red))){
-		//(L_adjacent1(Green) ∧ L_adjacent2(Green))
-		if(adjacent1.laneLight.currentColor.equals(LightColor.green)&&(adjacent2.laneLight.currentColor.equals(LightColor.green))){
-			//Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacent1(waitTime) ∧ L_adjacent2(waitTime))
-			if((lane.getWaitTimeValue() + across.getWaitTimeValue()) > (adjacent1.getWaitTimeValue()+adjacent2.getWaitTimeValue()) ) {
-				changeToNextColor(adjacent1);
-				//⇒ L_adjacent1(Yellow) ∧ L_adjacent2(Yellow)
-				//adjacent1.laneLight.setCurrentColor(LightColor.yellow);
-				//adjacent1.lightChangedThisTurn = true;
-				changeToNextColor(adjacent2);
-				//adjacent2.laneLight.setCurrentColor(LightColor.yellow);
-				//adjacent2.lightChangedThisTurn = true;
+		//(L_adjacentLeft(Green) ∧ L_adjacentRight(Green))
+		if(adjacentLeft.laneLight.currentColor.equals(LightColor.green)&&(adjacentRight.laneLight.currentColor.equals(LightColor.green))){
+			//Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime))
+			if((lane.getWaitTimeValue() + across.getWaitTimeValue()) > (adjacentLeft.getWaitTimeValue()+adjacentRight.getWaitTimeValue()) ) {
+				changeToNextColor(adjacentLeft);
+				//⇒ L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)
+				//adjacentLeft.laneLight.setCurrentColor(LightColor.yellow);
+				//adjacentLeft.lightChangedThisTurn = true;
+				changeToNextColor(adjacentRight);
+				//adjacentRight.laneLight.setCurrentColor(LightColor.yellow);
+				//adjacentRight.lightChangedThisTurn = true;
 				return true;
 			}
 		}
