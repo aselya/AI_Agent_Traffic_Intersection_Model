@@ -50,12 +50,16 @@ public class Driver {
 		fOrderAgentArray[2].lane.laneLight.setCurrentColor(LightColor.red);
 		fOrderAgentArray[3].lane.laneLight.setCurrentColor(LightColor.red);
 		
-		for (int i = 0 ; i < 10; i++) {
+		for (int i = 0 ; i < 15; i++) {
 			for (int x = 0 ; x < fOrderAgentArray.length; x ++) {
 				fOrderAgentArray[x].controlFlowLoop();
 				
+				
 			}
+			map2.addTrafficToRandomLane(map2.intersectionLanes );
+
 			System.out.println(i+" Cycle complete");
+			
 			for (int y = 0; y < fOrderAgentArray.length; y ++) {
 				
 			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.lightChangedThisTurn);

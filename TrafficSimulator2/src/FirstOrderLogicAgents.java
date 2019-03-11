@@ -75,22 +75,31 @@ public FirstOrderLogicAgents ( Lane currLane, Lane currAcross, Lane currAdjacent
 public void controlFlowLoop() {
 	//if a change has already been made do not make another
 	if (lane.lightChangedThisTurn == true) {
+		System.out.println(lane.laneName+ " : change made by other lanes already" );
 		return;
 	}
-	if (changeToYellowWhenNotBusy() == true){
+	else if (changeToYellowWhenNotBusy() == true){
+		System.out.println(lane.laneName+ ": changeToYellowWhenNotBusy()" );
+
 		return;
 	}
 	
-	if (changeBasedOnWaitTime() == true) {
+	else if (changeBasedOnWaitTime() == true) {
+		System.out.println(lane.laneName+ ": changeBasedOnWaitTime()" );
 		return;
 	}
 	//if the light is already yellow it must go red next
-	if (cantStayYellow() == true) {
+	else if (cantStayYellow() == true) {
+		System.out.println(lane.laneName+ ": cantStayYellow()" );
 		return;
 	}
 	//if a light across is changed then a change is made
-	if (changeLightAcross() == true) {
+	else if (changeLightAcross() == true) {
+		System.out.println(lane.laneName+ ": changeLightAcross()" );
+
 		return;
+	}else {
+		System.out.println(lane.laneName+ ": no change made" );
 	}
 	
 	//if the lanes become less crowded they change
@@ -106,8 +115,9 @@ public void controlFlowLoop() {
 public boolean cantStayYellow() {
 	//L_initial(yellow) ⇒ L_initial(red)
 	if(lane.laneLight.currentColor.equals(LightColor.yellow)){
+		if(lane.lightChangedThisTurn == false) {
 		changeToNextColor(lane);
-		lane.lightChangedThisTurn = true;
+		lane.lightChangedThisTurn = true;}
 	}
 
 	return lane.lightChangedThisTurn;
@@ -189,8 +199,10 @@ public boolean changeLightAcross() {
 
 
 public boolean changeToNextColor(Lane laneToChange) {
-	
-	if (laneToChange.laneLight.currentColor.equals(LightColor.green)){
+	if(laneToChange.lightChangedThisTurn == true) {
+		return false;
+	}
+	else if (laneToChange.laneLight.currentColor.equals(LightColor.green)){
 		//L(Green) ⇒ L(Yellow)
 		laneToChange.laneLight.setCurrentColor(LightColor.yellow);
 		laneToChange.lightChangedThisTurn = true;
