@@ -31,6 +31,8 @@ public class FirstOrderLogicAgents {
  *  (L_inital(red) ∧ L_across(red)) ∧ (L_adjacentLeft(Green) ∧ L_adjacentRight(Green))
  *  ∧ Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime)) 
  *  ⇒ L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)
+ *  	//since changing a light is a two cycle process another rule needs to be added to make the change from yellow to red
+ *  	(L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)) ⇒ (L_inital(Green) ∧ L_across(Green)) ∧ (L_adjacentLeft(Red) ∧ L_adjacentRight(Red))
  * Method that implements these rules:changeBasedOnWaitTime()
  * 
  * Rule concerning changing color when not busy
@@ -61,11 +63,11 @@ Lane adjacentRight;
 int totalWaitTime;
 int numberOfCars;
 
-public FirstOrderLogicAgents ( Lane lane, Lane across, Lane adjacentLeft, Lane adjacentRight){
- lane = this.lane;
- across= this.across;
- adjacentLeft = this.adjacentLeft;
- adjacentRight = this.adjacentRight;
+public FirstOrderLogicAgents ( Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight){
+ lane = currLane;
+ across= currAcross;
+ adjacentLeft = currAdjacentLeft;
+ adjacentRight = currAdjacentRight;
  System.out.println("FO lane agent created");
 }
 
@@ -73,6 +75,13 @@ public FirstOrderLogicAgents ( Lane lane, Lane across, Lane adjacentLeft, Lane a
 public void controlFlowLoop() {
 	//if a change has already been made do not make another
 	if (lane.lightChangedThisTurn == true) {
+		return;
+	}
+	if (changeToYellowWhenNotBusy() == true){
+		return;
+	}
+	
+	if (changeBasedOnWaitTime() == true) {
 		return;
 	}
 	//if the light is already yellow it must go red next
@@ -85,12 +94,12 @@ public void controlFlowLoop() {
 	}
 	
 	//if the lanes become less crowded they change
-	if (changeToYellowWhenNotBusy() == true){
-		return;
-	}
-	if (changeBasedOnWaitTime() == true) {
-		return;
-	}
+	//if (changeToYellowWhenNotBusy() == true){
+	//	return;
+	//}
+	//if (changeBasedOnWaitTime() == true) {
+	//	return;
+	//}
 }
 
 
@@ -109,7 +118,7 @@ public boolean changeToYellowWhenNotBusy() {
 	//(L_initial(Green) ∧ L_across(Green))
 	if(lane.laneLight.currentColor.equals(LightColor.green)&&(across.laneLight.currentColor.equals(LightColor.green))){
 		//∧ ((L_initial(Size <= 3) ∧ L_across(Size <= 6))
-		if (lane.getLaneQueue().size()>=3 && across.getLaneQueue().size() >= 6) {
+		if (lane.getLaneQueue().size()<=3 && across.getLaneQueue().size() <= 6) {
 			//L_initial(Yellow) ∧ L_across(Yellow)
 			changeToNextColor(lane);
 			//lane.laneLight.setCurrentColor(LightColor.yellow);
@@ -137,6 +146,14 @@ public boolean changeToYellowWhenNotBusy() {
 public boolean changeBasedOnWaitTime() {
 	//(L_inital(red) ∧ L_across(red))
 	if(lane.laneLight.currentColor.equals(LightColor.red)&&(across.laneLight.currentColor.equals(LightColor.red))){
+		//(L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)) ⇒ (L_inital(Green) ∧ L_across(Green)) ∧ (L_adjacentLeft(Red) ∧ L_adjacentRight(Red))
+		if(adjacentLeft.laneLight.currentColor.equals(LightColor.yellow)&&(adjacentRight.laneLight.currentColor.equals(LightColor.yellow))) {
+			changeToNextColor(adjacentLeft);
+			changeToNextColor(adjacentRight);
+			changeToNextColor(across);
+			changeToNextColor(lane);
+		}
+		
 		//(L_adjacentLeft(Green) ∧ L_adjacentRight(Green))
 		if(adjacentLeft.laneLight.currentColor.equals(LightColor.green)&&(adjacentRight.laneLight.currentColor.equals(LightColor.green))){
 			//Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime))
@@ -150,8 +167,9 @@ public boolean changeBasedOnWaitTime() {
 				//adjacentRight.lightChangedThisTurn = true;
 				return true;
 			}
+		
 		}
-	}
+		}
 	return false;
 }
 
