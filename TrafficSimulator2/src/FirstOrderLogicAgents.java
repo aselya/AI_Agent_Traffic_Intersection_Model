@@ -19,6 +19,11 @@ public class FirstOrderLogicAgents {
  * 		L(Red)⇒ L(Green)
  * Method that implements these rules: changeToNextColor()
  * 
+ * Rule concerning lane not changing from red if adjacent lanes are not red
+ * 		if the initial lane is red and the adjacent lanes are not red, no change can be made
+ * 		(L_inital(Red)) ∧ ¬(L_adjacentLeft(Red) ∧ L_adjacentRight(red)) ⇒ ¬L_initial(Green)
+ * Method that implements these rules: lookBothWaysBeforeChanging()
+ * 
  * Rule concerning matching color of lane across
  * 		If the initial lane is green and the lane across is not green or Yellow then the L_across must be made green
  * 		L_inital(Green) ∧ L_across¬(Green) ∨ L_across(Yellow) ⇒ L_across(Green)
@@ -26,20 +31,22 @@ public class FirstOrderLogicAgents {
  * 
  * 2 rules for initiating change in lights 
  * Rule concerning changing based on waitTime
- * 		If the sum of the wait time for one pair of lanes is greater than another and the first pair is not green and the others are
+ * 		If the sum of the wait time for one pair of lanes, with one train being worth 10X a vehicle, is greater than another and the first pair is not green and the others are
  * 		The second pair will be changed to yellow
- *  (L_inital(red) ∧ L_across(red)) ∧ (L_adjacentLeft(Green) ∧ L_adjacentRight(Green))
- *  ∧ Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime)) 
+ *  (L_inital(red) ∧ L_across(red)) ∧ ((L_adjacentLeft(Green) ∧ L_adjacentRight(Green))v((L_adjacentLeft(red) ∧ L_adjacentRight(red)))
+ *  ∧ Σ(L_initial( Σ(waitTime + 10*L_initial(train) ) ∧ L_Across(Σ(waitTime + 10*L_across(train)) > Σ(L_adjacentLeft(Σ(waitTime + 10*L_adjacentLeft(train)) ∧ L_adjacentRight(Σ(waitTime + 10*L_adjacentRight(train))) 
  *  ⇒ L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)
  *  	//since changing a light is a two cycle process another rule needs to be added to make the change from yellow to red
  *  	(L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)) ⇒ (L_inital(Green) ∧ L_across(Green)) ∧ (L_adjacentLeft(Red) ∧ L_adjacentRight(Red))
  * Method that implements these rules:changeBasedOnWaitTime()
  * 
  * Rule concerning changing color when not busy
- * 		If a lane is green and the lane across is green and a lane has a queue of a carInQueue value <=3 and the other lane has a queue length < 2 X of other member
- * 		Then change both to yellow
- * 		(L_initial(Green) ∧ L_across(Green)) ∧ ((L_initial(Size <= 3) ∧ L_across(Size <= 6))   ∨  (L_initial(Size <= 6) ∧ L_across(Size <= 3)))
- * 		⇒ L_initial(Yellow) ∧ L_across(Yellow)
+ * 		If a lane and the the one across do not have train
+ * 		If a lane is green and the lane across is green and a lane has a queue of a carInQueue value <=3 and the other lane has a queue length <= 2 X of other member
+ * 		(¬(L_initial(Train) ∧  ¬(L_across(Train) ) ∧
+ * 		((L_initial(Green) ∧ L_across(Green)) ∧ ((L_initial(Size <= 3) ∧ L_across(Size <= 6))   
+ * 		∨  ((L_initial(Size <= 6) ∧ L_across(Size <= 3)))
+ * 		 ⇒ L_initial(Yellow) ∧ L_across(Yellow)
  * Method that implements these rules: changeToYellowWhenNotBusy
  * 
  * Rule concerning how a light in yellow can't stay yellow
@@ -53,7 +60,7 @@ public class FirstOrderLogicAgents {
  * Rule conceringin how only one change per turn
  * 		If a light changes color it can not change again until next cycle
  * 		For all Lanes there the boolean lightChangedThisTurn is false
- * 		∀ Lanes: lightChangedThisTurn(Lanes)
+ * 		∀ Lanes: lightChangedThisTurn(True) ⇒ ¬(Lanes(changeToNextColor))
  */
 
 Lane lane;
@@ -71,11 +78,36 @@ public FirstOrderLogicAgents ( Lane currLane, Lane currAcross, Lane currAdjacent
  System.out.println("FO lane agent created");
 }
 
+public boolean lanesHaveChanged() {
+	//∀ Lanes: lightChangedThisTurn(True) ⇒ ¬(Lanes(changeToNextColor))
+	if(lane.getActionTakenThisTurn() == true) {
+		return true;
+	}else if(across.getActionTakenThisTurn() == true) {
+		return true;
+	}else if (adjacentLeft.getActionTakenThisTurn() == true) {
+		return true;
+	}else if(adjacentRight.getActionTakenThisTurn() == true) {
+			return true;
+	}else return false;
+}
 
 public void controlFlowLoop() {
 	//if a change has already been made do not make another
-	if (lane.lightChangedThisTurn == true) {
+	if (lane.getActionTakenThisTurn() == true) {
 		System.out.println(lane.laneName+ " : change made by other lanes already" );
+		return;
+	}else if(lookBothWaysBeforeChanging() == true) {
+		System.out.println(lane.laneName+ ": lookBothWaysBeforeChanging()" );
+		return;
+	}
+	//if the light is already yellow it must go red next
+	else if (cantStayYellow() == true) {
+		System.out.println(lane.laneName+ ": cantStayYellow()" );
+		return;
+	}
+	
+	else if (changeBasedOnWaitTime() == true) {
+		System.out.println(lane.laneName+ ": changeBasedOnWaitTime()" );
 		return;
 	}
 	else if (changeToYellowWhenNotBusy() == true){
@@ -84,15 +116,6 @@ public void controlFlowLoop() {
 		return;
 	}
 	
-	else if (changeBasedOnWaitTime() == true) {
-		System.out.println(lane.laneName+ ": changeBasedOnWaitTime()" );
-		return;
-	}
-	//if the light is already yellow it must go red next
-	else if (cantStayYellow() == true) {
-		System.out.println(lane.laneName+ ": cantStayYellow()" );
-		return;
-	}
 	//if a light across is changed then a change is made
 	else if (changeLightAcross() == true) {
 		System.out.println(lane.laneName+ ": changeLightAcross()" );
@@ -111,49 +134,74 @@ public void controlFlowLoop() {
 	//}
 }
 
+public boolean lookBothWaysBeforeChanging() {
+//(L_inital(Red)) ∧ ¬(L_adjacentLeft(Red) ∧ L_adjacentRight(red)) 
+	if(lane.laneLight.currentColor.equals(LightColor.red)) {
+		//∧ ¬(L_adjacentLeft(Red) ∧ L_adjacentRight(red))
+		if ((adjacentRight.laneLight.currentColor.equals(LightColor.green)||adjacentRight.laneLight.currentColor.equals(LightColor.yellow)) && adjacentLeft.laneLight.currentColor.equals(LightColor.green)||adjacentLeft.laneLight.currentColor.equals(LightColor.yellow)){
+			//⇒ ¬L_initial(Green)
+			lane.setActionTakenThisTurn(true);
+			return true;
+		}
+	}
+	return false;
+}
+
+
 
 public boolean cantStayYellow() {
 	//L_initial(yellow) ⇒ L_initial(red)
 	if(lane.laneLight.currentColor.equals(LightColor.yellow)){
-		if(lane.lightChangedThisTurn == false) {
+		if(lane.getActionTakenThisTurn() == false) {
+			
 		changeToNextColor(lane);
-		lane.lightChangedThisTurn = true;}
+		lane.setActionTakenThisTurn(true);}
 	}
 
-	return lane.lightChangedThisTurn;
+	return lane.getActionTakenThisTurn();
 }
 
 public boolean changeToYellowWhenNotBusy() {
+	//(¬(L_initial(Train) ∧  ¬(L_across(Train) )
+	if(lane.getTrainQueue().size() == 0 && across.getTrainQueue().size() == 0) {
 	
 	//(L_initial(Green) ∧ L_across(Green))
 	if(lane.laneLight.currentColor.equals(LightColor.green)&&(across.laneLight.currentColor.equals(LightColor.green))){
-		//∧ ((L_initial(Size <= 3) ∧ L_across(Size <= 6))
+		//∧ ((L_initial(Size <= 3) ∧ L_across(Size <= 6) ∧ (¬(L_initial(Train) ∧  ¬(L_across(Train) )
+		
 		if (lane.getLaneQueue().size()<=3 && across.getLaneQueue().size() <= 6) {
 			//L_initial(Yellow) ∧ L_across(Yellow)
 			changeToNextColor(lane);
 			//lane.laneLight.setCurrentColor(LightColor.yellow);
-			//lane.lightChangedThisTurn = true;
+			//lane.setActionTakenThisTurn(true);
 			changeToNextColor(across);
 			//across.laneLight.setCurrentColor(LightColor.yellow);
-			//across.lightChangedThisTurn = true;
+			//across.setActionTakenThisTurn(true);
 			return true;
 		//∨  (L_initial(Size <= 6) ∧ L_across(Size <= 3))
 		}else if(lane.getLaneQueue().size()>=6 && across.getLaneQueue().size() >= 3) {
 			//L_initial(Yellow) ∧ L_across(Yellow)
 			changeToNextColor(lane);
 			//lane.laneLight.setCurrentColor(LightColor.yellow);
-			//lane.lightChangedThisTurn = true;
+			//lane.setActionTakenThisTurn(true);
 			changeToNextColor(across);
 			//across.laneLight.setCurrentColor(LightColor.yellow);
-			//across.lightChangedThisTurn = true;
+			//across.setActionTakenThisTurn(true);
 			return true;
 		} 
 	}
-	
+	}
 	return false;
 }
 
 public boolean changeBasedOnWaitTime() {
+	System.out.println("pair 1" +(((lane.getLaneQueue().size()+ 10*lane.getTrainQueue().size()) + (across.getLaneQueue().size()+ 10*across.getTrainQueue().size())) +" pair 2: " + ((adjacentLeft.getLaneQueue().size() + 10*adjacentLeft.getTrainQueue().size()) +(adjacentRight.getLaneQueue().size() + + 10*adjacentRight.getTrainQueue().size())) ));
+	
+	//since this method initiates changes across all lanes, it first must be checked to make sure none of the lanes have changed yet
+	/*if (lanesHaveChanged() == true) {
+		return false;
+	}
+	*/
 	//(L_inital(red) ∧ L_across(red))
 	if(lane.laneLight.currentColor.equals(LightColor.red)&&(across.laneLight.currentColor.equals(LightColor.red))){
 		//(L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)) ⇒ (L_inital(Green) ∧ L_across(Green)) ∧ (L_adjacentLeft(Red) ∧ L_adjacentRight(Red))
@@ -162,24 +210,55 @@ public boolean changeBasedOnWaitTime() {
 			changeToNextColor(adjacentRight);
 			changeToNextColor(across);
 			changeToNextColor(lane);
+			return true;
 		}
 		
 		//(L_adjacentLeft(Green) ∧ L_adjacentRight(Green))
 		if(adjacentLeft.laneLight.currentColor.equals(LightColor.green)&&(adjacentRight.laneLight.currentColor.equals(LightColor.green))){
+			 // Σ(L_initial( Σ(waitTime + 10*L_initial(train) ) ∧ L_Across(Σ(waitTime + 10*L_across(train)) > Σ(L_adjacentLeft(Σ(waitTime + 10*L_adjacentLeft(train)) ∧ L_adjacentRight(Σ(waitTime + 10*L_adjacentRight(train))) 
+
 			//Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime))
-			if((lane.getWaitTimeValue() + across.getWaitTimeValue()) > (adjacentLeft.getWaitTimeValue()+adjacentRight.getWaitTimeValue()) ) {
+			if(((lane.getLaneQueue().size()+ 10*lane.getTrainQueue().size()) + (across.getLaneQueue().size()+ 10*across.getTrainQueue().size())) > ((adjacentLeft.getLaneQueue().size() + 10*adjacentLeft.getTrainQueue().size()) +(adjacentRight.getLaneQueue().size() + 10*adjacentRight.getTrainQueue().size())) ) {
 				changeToNextColor(adjacentLeft);
 				//⇒ L_adjacentLeft(Yellow) ∧ L_adjacentRight(Yellow)
 				//adjacentLeft.laneLight.setCurrentColor(LightColor.yellow);
-				//adjacentLeft.lightChangedThisTurn = true;
+				//adjacentLeft.setActionTakenThisTurn(true);
 				changeToNextColor(adjacentRight);
 				//adjacentRight.laneLight.setCurrentColor(LightColor.yellow);
-				//adjacentRight.lightChangedThisTurn = true;
+				//adjacentRight.setActionTakenThisTurn(true);
+				//prevents further changes
+				lane.setActionTakenThisTurn(true);
+				across.setActionTakenThisTurn(true);
 				return true;
 			}
+			}
+			
+			
+			//(L_adjacentLeft(Red) ∧ L_adjacentRight(Red))
+			if(adjacentLeft.laneLight.currentColor.equals(LightColor.red)&&(adjacentRight.laneLight.currentColor.equals(LightColor.red))){
+				System.out.println("adjright and left are red");
+				 // Σ(L_initial( Σ(waitTime + 10*L_initial(train) ) ∧ L_Across(Σ(waitTime + 10*L_across(train)) > Σ(L_adjacentLeft(Σ(waitTime + 10*L_adjacentLeft(train)) ∧ L_adjacentRight(Σ(waitTime + 10*L_adjacentRight(train))) 
+
+				//Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime))
+				if(((lane.getLaneQueue().size()+ 10*lane.getTrainQueue().size()) + (across.getLaneQueue().size()+ 10*across.getTrainQueue().size())) > ((adjacentLeft.getLaneQueue().size() + 10*adjacentLeft.getTrainQueue().size()) +(adjacentRight.getLaneQueue().size()+ 10*adjacentRight.getTrainQueue().size())) ) {
+					changeToNextColor(lane);
+					//⇒ L_initial(Yellow) ∧ L_across(Yellow)
+					changeToNextColor(across);
+					//prevents further changes
+					adjacentRight.setActionTakenThisTurn(true);
+					adjacentLeft.setActionTakenThisTurn(true);
+					return true;
+				}else {
+					changeToNextColor(adjacentLeft);
+					changeToNextColor(adjacentRight);
+					lane.setActionTakenThisTurn(true);
+					across.setActionTakenThisTurn(true);
+				}
+			
+			
+			}
+		}
 		
-		}
-		}
 	return false;
 }
 
@@ -190,7 +269,8 @@ public boolean changeLightAcross() {
 		//L_across¬(Green) ∨ L_across(Yellow)
 		if(!across.laneLight.currentColor.equals(LightColor.green)||across.laneLight.currentColor.equals(LightColor.yellow) ) {
 			//⇒ L_across(Green) 
-			changeToNextColor(across);
+			if(across.getActionTakenThisTurn() == false) {
+			changeToNextColor(across);}
 			return true;
 		}
 	}
@@ -199,23 +279,23 @@ public boolean changeLightAcross() {
 
 
 public boolean changeToNextColor(Lane laneToChange) {
-	if(laneToChange.lightChangedThisTurn == true) {
+	if(laneToChange.getActionTakenThisTurn() == true) {
 		return false;
 	}
 	else if (laneToChange.laneLight.currentColor.equals(LightColor.green)){
 		//L(Green) ⇒ L(Yellow)
 		laneToChange.laneLight.setCurrentColor(LightColor.yellow);
-		laneToChange.lightChangedThisTurn = true;
+		laneToChange.setActionTakenThisTurn(true);
 		return true;
 	}else if(laneToChange.laneLight.currentColor.equals(LightColor.yellow)){
 		//L(Yellow)⇒ L(Red)
 		laneToChange.laneLight.setCurrentColor(LightColor.red);
-		laneToChange.lightChangedThisTurn = true;
+		laneToChange.setActionTakenThisTurn(true);
 		return true;
 	}else {
 		//L(Red)⇒ L(Green)
 		laneToChange.laneLight.setCurrentColor(LightColor.green);
-		laneToChange.lightChangedThisTurn = true;
+		laneToChange.setActionTakenThisTurn(true);
 		return true;
 	}
 }

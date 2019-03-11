@@ -1,10 +1,16 @@
+import java.util.Random;
+
+
+
 public class Driver {
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Driver me = new Driver();
 		me.DoIt();
 		me.DoIt2();
+
 	}
 
 	private void DoIt() {
@@ -28,6 +34,9 @@ public class Driver {
 	public void DoIt2() {
 		IntersectionQueues map2 = new IntersectionQueues();
 		
+		int trainNumber = 0;
+		int systemTime = 0;
+		
 		for (int i = 0; i < 30; i ++) {
 			map2.addTrafficToRandomLane(map2.intersectionLanes );
 		}
@@ -50,27 +59,29 @@ public class Driver {
 		fOrderAgentArray[2].lane.laneLight.setCurrentColor(LightColor.red);
 		fOrderAgentArray[3].lane.laneLight.setCurrentColor(LightColor.red);
 		
-		for (int i = 0 ; i < 15; i++) {
+		for (int i = 0 ; i < 8; i++) {
 			for (int x = 0 ; x < fOrderAgentArray.length; x ++) {
 				fOrderAgentArray[x].controlFlowLoop();
 				
 				
 			}
 			map2.addTrafficToRandomLane(map2.intersectionLanes );
+			trainNumber = addTrain(0, 1, fOrderAgentArray, 80 , trainNumber, systemTime);
 
 			System.out.println(i+" Cycle complete");
 			
 			for (int y = 0; y < fOrderAgentArray.length; y ++) {
 				
-			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.lightChangedThisTurn);
+			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.lightChangedThisTurn + " TrainLane queue size: "+fOrderAgentArray[y].lane.getTrainQueue().size());
 			if(fOrderAgentArray[y].lane.laneLight.getCurrentColor().equals(LightColor.green) || fOrderAgentArray[y].lane.laneLight.getCurrentColor().equals(LightColor.yellow)) {
 				for (int z = 0 ; z < 3; z ++) {
 				fOrderAgentArray[y].lane.laneQueue.poll();
+				fOrderAgentArray[y].lane.trainQueue.poll();
 			}	
 			}
 			
 			
-			fOrderAgentArray[y].lane.lightChangedThisTurn = false;//resets values
+			fOrderAgentArray[y].lane.setActionTakenThisTurn(false);//resets values
 			
 			
 			}
@@ -80,8 +91,29 @@ public class Driver {
 		
 		
 		
+	}
+	public int addTrain(int lane1Index, int lane2Index, FirstOrderLogicAgents[] fOrderAgentArray, int rate , int trainNumber, int systemTime) {
+		Random rand = new Random();
+
+		// Obtain a number between [0 - 49].
+		int n = rand.nextInt(100);
 		
+		if (n <= (rate/2)) {
+			The_T train = new The_T(trainNumber, systemTime);
+			fOrderAgentArray[lane1Index].lane.trainQueue.add(train);
+			trainNumber ++;
+			System.out.println("Train added");
+		}else if(rate/2 <= n && n <= rate){
+			The_T train = new The_T(trainNumber, systemTime);
+			fOrderAgentArray[lane2Index].lane.trainQueue.add(train);
+			System.out.println("Train added");
+			trainNumber ++;
+		}
+		return trainNumber;
 	}
 	
-	
+
 }
+	
+	
+

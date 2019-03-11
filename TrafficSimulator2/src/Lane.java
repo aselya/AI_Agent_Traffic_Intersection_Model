@@ -10,6 +10,7 @@ public class Lane {
 	FirstOrderLogicAgents firstOrderAgent;
 	Boolean actionTakenThisTurn = false;
 	boolean lightChangedThisTurn =false;
+	Queue<The_T> trainQueue = new LinkedList<>();
 	
 	
 	
@@ -91,6 +92,36 @@ public class Lane {
 
 	public void setActionTakenThisTurn(Boolean actionTakenThisTurn) {
 		this.actionTakenThisTurn = actionTakenThisTurn;
+	}
+
+
+	public FirstOrderLogicAgents getFirstOrderAgent() {
+		return firstOrderAgent;
+	}
+
+
+	public void setFirstOrderAgent(FirstOrderLogicAgents firstOrderAgent) {
+		this.firstOrderAgent = firstOrderAgent;
+	}
+
+
+	public boolean isLightChangedThisTurn() {
+		return lightChangedThisTurn;
+	}
+
+
+	public void setLightChangedThisTurn(boolean lightChangedThisTurn) {
+		this.lightChangedThisTurn = lightChangedThisTurn;
+	}
+
+
+	public Queue<The_T> getTrainQueue() {
+		return trainQueue;
+	}
+
+
+	public void setTrainQueue(Queue<The_T> trainQueue) {
+		this.trainQueue = trainQueue;
 	}
 	
 }

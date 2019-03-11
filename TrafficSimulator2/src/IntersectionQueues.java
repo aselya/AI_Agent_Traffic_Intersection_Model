@@ -59,6 +59,12 @@ public class IntersectionQueues {
 		for (int i = 0; i < cycleTime/2; i ++) { //it takes about 2 seconds for a vehicle to cross an intersection
 				//System.out.println("first vehicle in queue:"+lane.getLaneQueue().peek().id);
 				//System.out.println("lane size before removal:"+lane.getLaneQueue().size());
+			
+			if(lane.getTrainQueue().size()> 0) {
+				lane.getTrainQueue().poll();
+				System.out.println("Train departed");
+			}
+			
 			lane.getLaneQueue().poll();
 			if (lane.getLaneQueue().size()>0) {
 				System.out.println("new first vehicle in queue:"+lane.getLaneQueue().peek().id);
