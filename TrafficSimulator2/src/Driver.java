@@ -21,12 +21,12 @@ public class Driver {
 			map.addTrafficToRandomLane(map.intersectionLanes );
 		}
 		
-		map.compareLaneWaitTimeValues();
+		//map.compareLaneWaitTimeValues();
 		//map.removeVehiclesFromLane(map.eastStraight, 10);
-		map.IntersectionToString(map.intersectionLanes);
+		//map.IntersectionToString(map.intersectionLanes);
 		
 		
-		SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
+		//SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
 		//System.out.println(supAgent.intersectionLanes.toString());
 	}
 
@@ -41,32 +41,41 @@ public class Driver {
 			map2.addTrafficToRandomLane(map2.intersectionLanes );
 		}
 		
-		
-		FirstOrderLogicAgents agent1 = new FirstOrderLogicAgents ( map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[2], map2.intersectionLanes[3]);
-		FirstOrderLogicAgents agent2 = new FirstOrderLogicAgents ( map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[3], map2.intersectionLanes[2]);
-		FirstOrderLogicAgents agent3 = new FirstOrderLogicAgents ( map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[1], map2.intersectionLanes[0]);
-		FirstOrderLogicAgents agent4 = new FirstOrderLogicAgents ( map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[0], map2.intersectionLanes[1]);
+																		//Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight, Lane leftTurn
+		FirstOrderLogicAgents agent1 = new FirstOrderLogicAgents ( map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[4]);
+		FirstOrderLogicAgents agent2 = new FirstOrderLogicAgents ( map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[5]);
+		//FirstOrderLogicAgents agent3 = new FirstOrderLogicAgents ( map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[1], map2.intersectionLanes[0], null);
+		//FirstOrderLogicAgents agent4 = new FirstOrderLogicAgents ( map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[0], map2.intersectionLanes[1], null);		
+		FirstOrderLogicAgents agent3 = new FirstOrderLogicAgents ( map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[4]);
+		FirstOrderLogicAgents agent4 = new FirstOrderLogicAgents ( map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[5]);		
+		FirstOrderLogicAgents agentLeftNorth = new FirstOrderLogicAgents ( map2.intersectionLanes[4], map2.intersectionLanes[5], map2.intersectionLanes[3], map2.intersectionLanes[4], null);
+		FirstOrderLogicAgents agentLeftSouth = new FirstOrderLogicAgents ( map2.intersectionLanes[5], map2.intersectionLanes[4], map2.intersectionLanes[4], map2.intersectionLanes[3], null);
 
-		FirstOrderLogicAgents[] fOrderAgentArray = new FirstOrderLogicAgents[4];
+		FirstOrderLogicAgents[] fOrderAgentArray = new FirstOrderLogicAgents[6];
 		
 		fOrderAgentArray[0] = agent1;
 		fOrderAgentArray[1] = agent2;
 		fOrderAgentArray[2] = agent3;
 		fOrderAgentArray[3] = agent4;
+		fOrderAgentArray[4] = agentLeftNorth;
+		fOrderAgentArray[5] = agentLeftSouth;
 		
 		fOrderAgentArray[0].lane.laneLight.setCurrentColor(LightColor.green);
 		fOrderAgentArray[1].lane.laneLight.setCurrentColor(LightColor.green);
 		fOrderAgentArray[2].lane.laneLight.setCurrentColor(LightColor.red);
 		fOrderAgentArray[3].lane.laneLight.setCurrentColor(LightColor.red);
+		fOrderAgentArray[4].lane.laneLight.setCurrentColor(LightColor.red);
+		fOrderAgentArray[5].lane.laneLight.setCurrentColor(LightColor.red);
 		
-		for (int i = 0 ; i < 8; i++) {
+		
+		for (int i = 0 ; i < 12; i++) {
 			for (int x = 0 ; x < fOrderAgentArray.length; x ++) {
 				fOrderAgentArray[x].controlFlowLoop();
 				
 				
 			}
 			map2.addTrafficToRandomLane(map2.intersectionLanes );
-			trainNumber = addTrain(0, 1, fOrderAgentArray, 80 , trainNumber, systemTime);
+			trainNumber = addTrain(0, 1, fOrderAgentArray, 20 , trainNumber, systemTime);
 
 			System.out.println(i+" Cycle complete");
 			

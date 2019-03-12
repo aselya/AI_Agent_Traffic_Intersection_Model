@@ -2,21 +2,23 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lane {
+	boolean leftTurnLane;
 	String laneName;
 	Queue<Vehicle> laneQueue = new LinkedList<>();
 	double waitTimeValue = 0;
 	TrafficLight laneLight;
 	TrafficLightAgent laneAgent;
 	FirstOrderLogicAgents firstOrderAgent;
-	Boolean actionTakenThisTurn = false;
+	boolean actionTakenThisTurn = false;
 	boolean lightChangedThisTurn =false;
 	Queue<The_T> trainQueue = new LinkedList<>();
 	
 	
 	
-	public Lane (String title) {
+	public Lane (String title, boolean left) {
 		laneName = title;
 		laneLight = new TrafficLight(laneName);
+		leftTurnLane = left;
 		
 	}
 	

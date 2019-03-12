@@ -6,36 +6,15 @@ public class IntersectionQueues {
 	//one quueue per lane
 	int carIDtracker = 0;
 	int time = 0;
-	Lane northStraight = new Lane("northStraight");
-	Lane southStraight = new Lane("southStraight");
-	Lane eastStraight = new Lane("eastStraight");
-	Lane westStraight = new Lane("westStraight");
+	Lane northStraight = new Lane("northStraight", false);
+	Lane southStraight = new Lane("southStraight", false);
+	Lane eastStraight = new Lane("eastStraight", false);
+	Lane westStraight = new Lane("westStraight", false);
+	Lane northLeft = new Lane("northLeft", true);
+	Lane southLeft = new Lane("southLeft", true);
 
-
-	Lane intersectionLanes[] = new Lane[4];
+	Lane intersectionLanes[] = new Lane[6];
 	
-	public int compareLaneWaitTimeValues () {
-		double maxValue = 0;
-		int maxValueIndex =0;
-		for (int i = 0; i < intersectionLanes.length; i++ ) {
-			System.out.println("intersectionLanes[i]: "+ intersectionLanes[i]);
-			if (intersectionLanes[i].laneName.isEmpty()) {
-					System.out.println("end of lanes reached");
-				break;
-			}else if (intersectionLanes[i].calculateWaitTimeValue( time) > maxValue){
-						System.out.println("previous maxvalue: " + maxValue );
-					maxValue =intersectionLanes[i].calculateWaitTimeValue( time);
-					maxValueIndex = i;
-					System.out.println("new maxvalue: " + maxValue );
-					System.out.println("new maxvalueIndex: " + maxValueIndex );
-					
-				}
-			} 
-		
-		System.out.println("final maxvalue: " + maxValue );
-		System.out.println("final maxvalueIndex: " + maxValueIndex );
-		return maxValueIndex;
-	}
 	
 	
 	
@@ -48,6 +27,8 @@ public class IntersectionQueues {
 		intersectionLanes[1] = southStraight;
 		intersectionLanes[2] = eastStraight;
 		intersectionLanes[3] = westStraight;
+		intersectionLanes[4] = northLeft;
+		intersectionLanes[5] = northLeft;
 		
 		
 		
@@ -95,15 +76,19 @@ public class IntersectionQueues {
 	public void addTrafficToRandomLane( Lane [] laneArray  ) {
 		Random rand = new Random();
 		int laneSelected  = rand.nextInt(laneArray.length);
+			if (laneArray[laneSelected] != null) {
 			System.out.println("lane selected to add traffic: " + laneArray[laneSelected].laneName);
-		addRandomAmountOfTrafficToALane( laneArray[laneSelected]);
+			addRandomAmountOfTrafficToALane( laneArray[laneSelected]);
+			}
 }
 	
 	public String IntersectionToString (Lane [] laneArray) {
 		String str = "\n";
 		for(int i = 0; i < laneArray.length; i ++) {
-			str = str +"\n" + laneArray[i].laneName + ": number of vehicles "+ laneArray[i].laneQueue.size() + " with a waiting value of: " + laneArray[i].calculateWaitTimeValue(time);
+			if (laneArray[i] != null) {
+			str = str +"\n" + laneArray[i].laneName + ": number of vehicles "+ laneArray[i].laneQueue.size() ;
 		}
+			}
 		System.out.println(str);
 		
 		return str;
@@ -112,3 +97,26 @@ public class IntersectionQueues {
 
 
 
+/*public int compareLaneWaitTimeValues () {
+double maxValue = 0;
+int maxValueIndex =0;
+for (int i = 0; i < intersectionLanes.length; i++ ) {
+	System.out.println("intersectionLanes[i]: "+ intersectionLanes[i]);
+	if (intersectionLanes[i].laneName.isEmpty()) {
+			System.out.println("end of lanes reached");
+		break;
+	}else if (intersectionLanes[i].calculateWaitTimeValue( time) > maxValue){
+				System.out.println("previous maxvalue: " + maxValue );
+			maxValue =intersectionLanes[i].calculateWaitTimeValue( time);
+			maxValueIndex = i;
+			System.out.println("new maxvalue: " + maxValue );
+			System.out.println("new maxvalueIndex: " + maxValueIndex );
+			
+		}
+	} 
+
+System.out.println("final maxvalue: " + maxValue );
+System.out.println("final maxvalueIndex: " + maxValueIndex );
+return maxValueIndex;
+}
+*/

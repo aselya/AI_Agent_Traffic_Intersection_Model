@@ -56,25 +56,37 @@ public class FirstOrderLogicAgents {
  * 		L_initial(red) ⇒ L_initial(red) v L_initial(green)
  * Method that implements these rules: cantStayYellow()
  * 		
- * other rules to consider
- * Rule conceringin how only one change per turn
+ * Rule concerning how only one change per turn
  * 		If a light changes color it can not change again until next cycle
  * 		For all Lanes there the boolean lightChangedThisTurn is false
  * 		∀ Lanes: lightChangedThisTurn(True) ⇒ ¬(Lanes(changeToNextColor))
+ * Method that implements this rule: lanesHaveChanged()
+ * 
+ * Rule concerning how a left lane can not have greens or yellow going across or adjacent lights be red
+ * 		if the lane across, adjacent left and adjacent right are not red the left can not be green
+ * 		L_left(Red) v ¬L_across(Red) v ¬L_adjacentRight(Red) v ¬L_adjacentLeft(Red) ⇒ L_Left(red)
+ * Method that implements this rule: noLeft()
+ * 
+ * Rule concerning how a straight lane can not cross a green or yellow left lane
+ * 		if a left lane is not red 
+ * 		L_initial(red) ∧ ¬L_acrossLeft(red) ∧ ¬L_adjacentRightTurn(red) ∧ ¬L_adjacentLeftTurn(red)  ⇒ L_initial(red)
+ * Method that implements this rule: noStraightAgainstLeft()
  */
 
 Lane lane;
 Lane across;
 Lane adjacentLeft;
 Lane adjacentRight;
+Lane leftTurnLane;
 int totalWaitTime;
 int numberOfCars;
 
-public FirstOrderLogicAgents ( Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight){
+public FirstOrderLogicAgents ( Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight, Lane leftTurn){
  lane = currLane;
  across= currAcross;
  adjacentLeft = currAdjacentLeft;
  adjacentRight = currAdjacentRight;
+ leftTurnLane = leftTurn;
  System.out.println("FO lane agent created");
 }
 
@@ -88,6 +100,8 @@ public boolean lanesHaveChanged() {
 		return true;
 	}else if(adjacentRight.getActionTakenThisTurn() == true) {
 			return true;
+	}else if(across.getActionTakenThisTurn() == true) {
+				return true;
 	}else return false;
 }
 
@@ -104,7 +118,12 @@ public void controlFlowLoop() {
 	else if (cantStayYellow() == true) {
 		System.out.println(lane.laneName+ ": cantStayYellow()" );
 		return;
+	}else if (noLeft()==true) {
+		System.out.println(lane.laneName+ ": noLeft()" );
+	}else if(noChangeIfLeftisNotRed () == true) {
+		System.out.println(lane.laneName+ ": noChangeIfLeftisNotRed ()" );
 	}
+	
 	
 	else if (changeBasedOnWaitTime() == true) {
 		System.out.println(lane.laneName+ ": changeBasedOnWaitTime()" );
@@ -124,15 +143,42 @@ public void controlFlowLoop() {
 	}else {
 		System.out.println(lane.laneName+ ": no change made" );
 	}
-	
-	//if the lanes become less crowded they change
-	//if (changeToYellowWhenNotBusy() == true){
-	//	return;
-	//}
-	//if (changeBasedOnWaitTime() == true) {
-	//	return;
-	//}
 }
+
+
+public boolean noChangeIfLeftisNotRed () {
+	if(leftTurnLane != null) {
+		if (!leftTurnLane.laneLight.currentColor.equals(LightColor.red)) {
+			lane.actionTakenThisTurn = true;
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+
+ 
+public boolean noLeft() {
+	//L_left()
+	if (lane.leftTurnLane == true) {
+		//L_left(Red)
+		if(lane.laneLight.currentColor.equals(LightColor.red)) {
+			//v ¬L_across(Red) v ¬L_adjacentRight(Red) v ¬R_adjacent(Red)
+			
+			if(!across.laneLight.currentColor.equals(LightColor.red)||
+				!adjacentRight.getLaneLight().getCurrentColor().equals(LightColor.red)||
+				!adjacentLeft.getLaneLight().getCurrentColor().equals(LightColor.red)) {
+				lane.setActionTakenThisTurn(true);
+				return true;
+			}
+		}
+	}
+	
+	return false;
+}
+
 
 public boolean lookBothWaysBeforeChanging() {
 //(L_inital(Red)) ∧ ¬(L_adjacentLeft(Red) ∧ L_adjacentRight(red)) 
@@ -179,7 +225,7 @@ public boolean changeToYellowWhenNotBusy() {
 			//across.setActionTakenThisTurn(true);
 			return true;
 		//∨  (L_initial(Size <= 6) ∧ L_across(Size <= 3))
-		}else if(lane.getLaneQueue().size()>=6 && across.getLaneQueue().size() >= 3) {
+		}else if(lane.getLaneQueue().size()<=6 && across.getLaneQueue().size() <= 3) {
 			//L_initial(Yellow) ∧ L_across(Yellow)
 			changeToNextColor(lane);
 			//lane.laneLight.setCurrentColor(LightColor.yellow);
