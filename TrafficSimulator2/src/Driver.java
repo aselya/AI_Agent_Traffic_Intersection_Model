@@ -10,6 +10,24 @@ public class Driver {
 		Driver me = new Driver();
 		me.DoIt();
 	}
+	
+	private void DoIt2() {
+		// TODO Auto-generated method stub
+		IntersectionQueues map = new IntersectionQueues();
+		
+		for (int i = 0; i < 30; i ++) {
+			map.addTrafficToRandomLane(map.intersectionLanes );
+		}
+		
+		map.compareLaneWaitTimeValues();
+		map.removeVehiclesFromLane(map.eastStraight, 10);
+		map.IntersectionToString(map.intersectionLanes);
+		
+		
+		SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
+		System.out.println(supAgent.intersectionLanes.toString());
+	}
+
 
 	public void DoIt() {
 		IntersectionQueues map2 = new IntersectionQueues();
