@@ -9,29 +9,9 @@ public class Driver {
 		// TODO Auto-generated method stub
 		Driver me = new Driver();
 		me.DoIt();
-		me.DoIt2();
-
 	}
 
-	private void DoIt() {
-		// TODO Auto-generated method stub
-		IntersectionQueues map = new IntersectionQueues();
-		
-		for (int i = 0; i < 30; i ++) {
-			map.addTrafficToRandomLane(map.intersectionLanes );
-		}
-		
-		//map.compareLaneWaitTimeValues();
-		//map.removeVehiclesFromLane(map.eastStraight, 10);
-		//map.IntersectionToString(map.intersectionLanes);
-		
-		
-		//SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
-		//System.out.println(supAgent.intersectionLanes.toString());
-	}
-
-	
-	public void DoIt2() {
+	public void DoIt() {
 		IntersectionQueues map2 = new IntersectionQueues();
 		
 		int trainNumber = 0;

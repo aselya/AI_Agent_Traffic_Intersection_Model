@@ -82,41 +82,8 @@ public class IntersectionQueues {
 			}
 }
 	
-	public String IntersectionToString (Lane [] laneArray) {
-		String str = "\n";
-		for(int i = 0; i < laneArray.length; i ++) {
-			if (laneArray[i] != null) {
-			str = str +"\n" + laneArray[i].laneName + ": number of vehicles "+ laneArray[i].laneQueue.size() ;
-		}
-			}
-		System.out.println(str);
-		
-		return str;
-	}
+	
 }
 
 
 
-/*public int compareLaneWaitTimeValues () {
-double maxValue = 0;
-int maxValueIndex =0;
-for (int i = 0; i < intersectionLanes.length; i++ ) {
-	System.out.println("intersectionLanes[i]: "+ intersectionLanes[i]);
-	if (intersectionLanes[i].laneName.isEmpty()) {
-			System.out.println("end of lanes reached");
-		break;
-	}else if (intersectionLanes[i].calculateWaitTimeValue( time) > maxValue){
-				System.out.println("previous maxvalue: " + maxValue );
-			maxValue =intersectionLanes[i].calculateWaitTimeValue( time);
-			maxValueIndex = i;
-			System.out.println("new maxvalue: " + maxValue );
-			System.out.println("new maxvalueIndex: " + maxValueIndex );
-			
-		}
-	} 
-
-System.out.println("final maxvalue: " + maxValue );
-System.out.println("final maxvalueIndex: " + maxValueIndex );
-return maxValueIndex;
-}
-*/
