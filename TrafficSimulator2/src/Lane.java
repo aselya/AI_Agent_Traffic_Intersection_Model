@@ -12,6 +12,8 @@ public class Lane {
 	boolean actionTakenThisTurn = false;
 	boolean lightChangedThisTurn =false;
 	Queue<The_T> trainQueue = new LinkedList<>();
+	Queue<Pedestrians> pedestrianQueue = new LinkedList<>();
+	
 	
 	
 	
@@ -30,11 +32,23 @@ public class Lane {
 		//takes the arrivial time of first car squares it and divides by the number of cars
 		//waitTimeValue = Math.pow((currentTime - laneQueue.peek().arrivalTime) , 2)/laneQueue.size();
 		
-		waitTimeValue = laneQueue.size();
+		//this cycles through the queue adding the total wait times for each vehicle
+		waitTimeValue = 0;
+		for (int i = 0; i < laneQueue.size(); i++) {
+		Vehicle currentVehicle = laneQueue.remove();
+		waitTimeValue += (currentTime - currentVehicle.arrivalTime); //calculates the difference between arrival time and current time
+		laneQueue.add(currentVehicle);
+		}
 		
+		//cycles through the pedestrian queue and adds wait times, but each pedestrian is worth less than a car
+		for (int i = 0; i < pedestrianQueue.size(); i++) {
+			Pedestrians person = pedestrianQueue.remove();
+			waitTimeValue += (currentTime - person.arrivalTime)/4; //calculates the difference between arrival time and current time and adjusts for people being less important to traffic flow than cars
+			pedestrianQueue.add(person);
+			}
 		return waitTimeValue;
-		
-	}
+		}
+				
 
 
 	public String getLaneName() {
@@ -124,6 +138,31 @@ public class Lane {
 
 	public void setTrainQueue(Queue<The_T> trainQueue) {
 		this.trainQueue = trainQueue;
+	}
+
+
+	public boolean isLeftTurnLane() {
+		return leftTurnLane;
+	}
+
+
+	public void setLeftTurnLane(boolean leftTurnLane) {
+		this.leftTurnLane = leftTurnLane;
+	}
+
+
+	public Queue<Pedestrians> getPedestrianQueue() {
+		return pedestrianQueue;
+	}
+
+
+	public void setPedestrianQueue(Queue<Pedestrians> pedestrianQueue) {
+		this.pedestrianQueue = pedestrianQueue;
+	}
+
+
+	public void setActionTakenThisTurn(boolean actionTakenThisTurn) {
+		this.actionTakenThisTurn = actionTakenThisTurn;
 	}
 	
 }

@@ -9,6 +9,7 @@ public class Driver {
 		// TODO Auto-generated method stub
 		Driver me = new Driver();
 		me.DoIt();
+		//me.DoIt2();
 	}
 	
 	private void DoIt2() {
@@ -19,9 +20,8 @@ public class Driver {
 			map.addTrafficToRandomLane(map.intersectionLanes );
 		}
 		
-		map.compareLaneWaitTimeValues();
-		map.removeVehiclesFromLane(map.eastStraight, 10);
 		map.IntersectionToString(map.intersectionLanes);
+		
 		
 		
 		SupervisingAgent supAgent = new SupervisingAgent(map.intersectionLanes, map);
@@ -42,8 +42,6 @@ public class Driver {
 																		//Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight, Lane leftTurn
 		FirstOrderLogicAgents agent1 = new FirstOrderLogicAgents ( map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[4]);
 		FirstOrderLogicAgents agent2 = new FirstOrderLogicAgents ( map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[5]);
-		//FirstOrderLogicAgents agent3 = new FirstOrderLogicAgents ( map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[1], map2.intersectionLanes[0], null);
-		//FirstOrderLogicAgents agent4 = new FirstOrderLogicAgents ( map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[0], map2.intersectionLanes[1], null);		
 		FirstOrderLogicAgents agent3 = new FirstOrderLogicAgents ( map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[4]);
 		FirstOrderLogicAgents agent4 = new FirstOrderLogicAgents ( map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[5]);		
 		FirstOrderLogicAgents agentLeftNorth = new FirstOrderLogicAgents ( map2.intersectionLanes[4], map2.intersectionLanes[5], map2.intersectionLanes[3], map2.intersectionLanes[4], null);
@@ -67,19 +65,21 @@ public class Driver {
 		
 		
 		for (int i = 0 ; i < 12; i++) {
+			systemTime += 3; //increases system time
 			for (int x = 0 ; x < fOrderAgentArray.length; x ++) {
-				fOrderAgentArray[x].controlFlowLoop();
+				fOrderAgentArray[x].controlFlowLoop( systemTime);
 				
 				
 			}
 			map2.addTrafficToRandomLane(map2.intersectionLanes );
+			map2.addPeopleToRandomLane(map2.intersectionLanes);
 			trainNumber = addTrain(0, 1, fOrderAgentArray, 20 , trainNumber, systemTime);
 
 			System.out.println(i+" Cycle complete");
 			
 			for (int y = 0; y < fOrderAgentArray.length; y ++) {
 				
-			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.lightChangedThisTurn + " TrainLane queue size: "+fOrderAgentArray[y].lane.getTrainQueue().size());
+			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.lightChangedThisTurn + " TrainLane queue size: "+fOrderAgentArray[y].lane.getTrainQueue().size() + " Pedestrian Queue Size: "+fOrderAgentArray[y].lane.pedestrianQueue.size() );
 			if(fOrderAgentArray[y].lane.laneLight.getCurrentColor().equals(LightColor.green) || fOrderAgentArray[y].lane.laneLight.getCurrentColor().equals(LightColor.yellow)) {
 				for (int z = 0 ; z < 3; z ++) {
 				fOrderAgentArray[y].lane.laneQueue.poll();
