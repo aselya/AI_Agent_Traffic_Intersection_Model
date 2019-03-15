@@ -307,8 +307,13 @@ public class FirstOrderLogicAgents {
   return false;
  }
  
- //change left lane based on wait times
-// if currentLane waitTime + currentLaneLeft waitime > across waitime + across leftwaitTime
+ //if everything is red
+// if currentLane waitTime + currentLaneLeft waitime > currentLane waitTime across waitime 
+//then change left and current to green 
+ 
+//if current is green and left is green  
+//if currentlanewait time + left wait time < currentLane waitTime across waitime 
+//left is now yellow
  
  
 
