@@ -2,23 +2,23 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lane {
+	boolean actionTakenThisTurn;
 	boolean leftTurnLane;
+	boolean hasPedestrians;
 	String laneName;
-	Queue<Vehicle> laneQueue = new LinkedList<>();
 	double waitTimeValue = 0;
 	TrafficLight laneLight;
-	TrafficLightAgent laneAgent;
 	FirstOrderLogicAgents firstOrderAgent;
-	boolean actionTakenThisTurn = false;
-	boolean lightChangedThisTurn =false;
+	Queue<Vehicle> laneQueue = new LinkedList<>();
 	Queue<The_T> trainQueue = new LinkedList<>();
 	Queue<Pedestrians> pedestrianQueue = new LinkedList<>();
 	
 	
 	
 	
-	public Lane (String title, boolean left) {
+	public Lane (String title, boolean left, boolean pedestrians) {
 		laneName = title;
+		hasPedestrians = pedestrians;
 		laneLight = new TrafficLight(laneName);
 		leftTurnLane = left;
 		
@@ -91,14 +91,6 @@ public class Lane {
 	}
 
 
-	public TrafficLightAgent getLaneAgent() {
-		return laneAgent;
-	}
-
-
-	public void setLaneAgent(TrafficLightAgent laneAgent) {
-		this.laneAgent = laneAgent;
-	}
 
 
 	public Boolean getActionTakenThisTurn() {
@@ -118,16 +110,6 @@ public class Lane {
 
 	public void setFirstOrderAgent(FirstOrderLogicAgents firstOrderAgent) {
 		this.firstOrderAgent = firstOrderAgent;
-	}
-
-
-	public boolean isLightChangedThisTurn() {
-		return lightChangedThisTurn;
-	}
-
-
-	public void setLightChangedThisTurn(boolean lightChangedThisTurn) {
-		this.lightChangedThisTurn = lightChangedThisTurn;
 	}
 
 
@@ -163,6 +145,16 @@ public class Lane {
 
 	public void setActionTakenThisTurn(boolean actionTakenThisTurn) {
 		this.actionTakenThisTurn = actionTakenThisTurn;
+	}
+
+
+	public boolean isHasPedestrians() {
+		return hasPedestrians;
+	}
+
+
+	public void setHasPedestrians(boolean hasPedestrians) {
+		this.hasPedestrians = hasPedestrians;
 	}
 	
 }

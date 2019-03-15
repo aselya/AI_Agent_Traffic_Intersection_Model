@@ -40,12 +40,17 @@ public class Driver {
 		}
 		
 																		//Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight, Lane leftTurn
+		//FirstOrderLogicAgents agent1 = new FirstOrderLogicAgents ( map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[2], map2.intersectionLanes[3], null);
+		//FirstOrderLogicAgents agent2 = new FirstOrderLogicAgents ( map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[3], map2.intersectionLanes[2], null);
+		
 		FirstOrderLogicAgents agent1 = new FirstOrderLogicAgents ( map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[4]);
 		FirstOrderLogicAgents agent2 = new FirstOrderLogicAgents ( map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[5]);
 		FirstOrderLogicAgents agent3 = new FirstOrderLogicAgents ( map2.intersectionLanes[3], map2.intersectionLanes[2], map2.intersectionLanes[1], map2.intersectionLanes[0], map2.intersectionLanes[4]);
 		FirstOrderLogicAgents agent4 = new FirstOrderLogicAgents ( map2.intersectionLanes[2], map2.intersectionLanes[3], map2.intersectionLanes[0], map2.intersectionLanes[1], map2.intersectionLanes[5]);		
-		FirstOrderLogicAgents agentLeftNorth = new FirstOrderLogicAgents ( map2.intersectionLanes[4], map2.intersectionLanes[5], map2.intersectionLanes[3], map2.intersectionLanes[4], null);
-		FirstOrderLogicAgents agentLeftSouth = new FirstOrderLogicAgents ( map2.intersectionLanes[5], map2.intersectionLanes[4], map2.intersectionLanes[4], map2.intersectionLanes[3], null);
+		FirstOrderLogicAgents agentLeftNorth = new FirstOrderLogicAgents ( map2.intersectionLanes[4], map2.intersectionLanes[5], map2.intersectionLanes[3], map2.intersectionLanes[4], map2.intersectionLanes[0]);
+		FirstOrderLogicAgents agentLeftSouth = new FirstOrderLogicAgents ( map2.intersectionLanes[5], map2.intersectionLanes[4], map2.intersectionLanes[4], map2.intersectionLanes[3], map2.intersectionLanes[1]);		
+		//FirstOrderLogicAgents agentLeftNorth = new FirstOrderLogicAgents ( map2.intersectionLanes[4], map2.intersectionLanes[5], map2.intersectionLanes[3], map2.intersectionLanes[4], null);
+		//FirstOrderLogicAgents agentLeftSouth = new FirstOrderLogicAgents ( map2.intersectionLanes[5], map2.intersectionLanes[4], map2.intersectionLanes[4], map2.intersectionLanes[3], null);
 
 		FirstOrderLogicAgents[] fOrderAgentArray = new FirstOrderLogicAgents[6];
 		
@@ -64,6 +69,12 @@ public class Driver {
 		fOrderAgentArray[5].lane.laneLight.setCurrentColor(LightColor.red);
 		
 		
+			
+			for (int x = 0 ; x < fOrderAgentArray.length; x ++) {
+				fOrderAgentArray[x].lane.setActionTakenThisTurn(true);
+			}
+		
+		
 		for (int i = 0 ; i < 12; i++) {
 			systemTime += 3; //increases system time
 			for (int x = 0 ; x < fOrderAgentArray.length; x ++) {
@@ -79,11 +90,14 @@ public class Driver {
 			
 			for (int y = 0; y < fOrderAgentArray.length; y ++) {
 				
-			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.lightChangedThisTurn + " TrainLane queue size: "+fOrderAgentArray[y].lane.getTrainQueue().size() + " Pedestrian Queue Size: "+fOrderAgentArray[y].lane.pedestrianQueue.size() );
+			System.out.println(fOrderAgentArray[y].lane.laneName + " current light color: "+ fOrderAgentArray[y].lane.laneLight.getCurrentColor() +" number of cars: "+ fOrderAgentArray[y].lane.getLaneQueue().size() + " changed this turn: "+ fOrderAgentArray[y].lane.actionTakenThisTurn + " TrainLane queue size: "+fOrderAgentArray[y].lane.getTrainQueue().size() + " Pedestrian Queue Size: "+fOrderAgentArray[y].lane.pedestrianQueue.size() );
 			if(fOrderAgentArray[y].lane.laneLight.getCurrentColor().equals(LightColor.green) || fOrderAgentArray[y].lane.laneLight.getCurrentColor().equals(LightColor.yellow)) {
 				for (int z = 0 ; z < 3; z ++) {
 				fOrderAgentArray[y].lane.laneQueue.poll();
 				fOrderAgentArray[y].lane.trainQueue.poll();
+				while (fOrderAgentArray[y].lane.pedestrianQueue.size()> 0) {
+				fOrderAgentArray[y].lane.pedestrianQueue.poll();
+				}
 			}	
 			}
 			

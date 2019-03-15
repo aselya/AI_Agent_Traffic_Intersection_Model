@@ -7,12 +7,13 @@ public class IntersectionQueues {
 	int carIDtracker = 0;
 	int personID = 0;
 	int time = 0;
-	Lane northStraight = new Lane("northStraight", false);
-	Lane southStraight = new Lane("southStraight", false);
-	Lane eastStraight = new Lane("eastStraight", false);
-	Lane westStraight = new Lane("westStraight", false);
-	Lane northLeft = new Lane("northLeft", true);
-	Lane southLeft = new Lane("southLeft", true);
+	//lane name, is it a left turn lane, does it have pedestrians
+	Lane northStraight = new Lane("northStraight", false, true);
+	Lane southStraight = new Lane("southStraight", false, true);
+	Lane eastStraight = new Lane("eastStraight", false, true);
+	Lane westStraight = new Lane("westStraight", false, true);
+	Lane northLeft = new Lane("northLeft", true, false);
+	Lane southLeft = new Lane("southLeft", true, false);
 
 	Lane intersectionLanes[] = new Lane[6];
 	
@@ -86,7 +87,7 @@ public class IntersectionQueues {
 		Random rand = new Random();
 		int laneSelected  = rand.nextInt(laneArray.length);
 			if (laneArray[laneSelected] != null) {
-				if (laneArray[laneSelected].leftTurnLane == false) {//make sure there are no people added to left turn lanes
+				if (laneArray[laneSelected].hasPedestrians == true) {//make sure there are no people added to left turn lanes or lanes with no crosswalks
 			System.out.println("lane selected to add people: " + laneArray[laneSelected].laneName);
 			addRandomAmountOfPeopleToALane( laneArray[laneSelected]);
 			}

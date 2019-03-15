@@ -93,12 +93,12 @@ public class FirstOrderLogicAgents {
  int numberOfCars;
  int systemTime;
 
- public FirstOrderLogicAgents(Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight, Lane leftTurn) {
+ public FirstOrderLogicAgents(Lane currLane, Lane currAcross, Lane currAdjacentLeft, Lane currAdjacentRight, Lane leftTurnOrLaneNextToLeftTurn) {
   lane = currLane;
   across = currAcross;
   adjacentLeft = currAdjacentLeft;
   adjacentRight = currAdjacentRight;
-  leftTurnLane = leftTurn;
+  leftTurnLane = leftTurnOrLaneNextToLeftTurn;
   System.out.println("FO lane agent created");
  }
 
@@ -199,7 +199,7 @@ public class FirstOrderLogicAgents {
     //⇒ ¬L_initial(Green)
     lane.setActionTakenThisTurn(true);
     return true;
-   }
+    }
   }
   return false;
  }
@@ -288,7 +288,7 @@ public class FirstOrderLogicAgents {
     // Σ(L_initial( Σ(waitTime + 10*L_initial(train) ) ∧ L_Across(Σ(waitTime + 10*L_across(train)) > Σ(L_adjacentLeft(Σ(waitTime + 10*L_adjacentLeft(train)) ∧ L_adjacentRight(Σ(waitTime + 10*L_adjacentRight(train))) 
 
     //Σ(L_initial(waitTime) ∧ L_Across(waitTime)) > Σ(L_adjacentLeft(waitTime) ∧ L_adjacentRight(waitTime))
-    if (((lane.getLaneQueue().size() + 10 * lane.getTrainQueue().size()) + (across.getLaneQueue().size() + 10 * across.getTrainQueue().size())) > ((adjacentLeft.getLaneQueue().size() + 10 * adjacentLeft.getTrainQueue().size()) + (adjacentRight.getLaneQueue().size() + 10 * adjacentRight.getTrainQueue().size()))) {
+    if (((lane.getWaitTimeValue() + 10 * lane.getTrainQueue().size()) + (across.getWaitTimeValue() + 10 * across.getTrainQueue().size())) > ((adjacentLeft.getWaitTimeValue() + 10 * adjacentLeft.getTrainQueue().size()) + (adjacentRight.getWaitTimeValue() + 10 * adjacentRight.getTrainQueue().size()))) {
         //⇒ L_initial(Yellow) ∧ L_across(Yellow)
      changeToNextColor(lane);
      changeToNextColor(across);
@@ -306,6 +306,11 @@ public class FirstOrderLogicAgents {
   }
   return false;
  }
+ 
+ //change left lane based on wait times
+// if currentLane waitTime + currentLaneLeft waitime > across waitime + across leftwaitTime
+ 
+ 
 
  //changes the light across to match the current one
  //L_inital(Green) ∧ ¬(L_across(Green) ∨ L_across(Yellow)) ⇒ L_across(Green)
