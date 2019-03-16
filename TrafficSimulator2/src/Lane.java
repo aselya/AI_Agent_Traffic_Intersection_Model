@@ -2,11 +2,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Lane {
+	String laneName;
+	int numberOfVehicles;
+	int totalWaitTime;
+	double averageWaitTime = 0;
+	double waitTimeValue = 0;
 	boolean actionTakenThisTurn;
 	boolean leftTurnLane;
 	boolean hasPedestrians;
-	String laneName;
-	double waitTimeValue = 0;
 	TrafficLight laneLight;
 	FirstOrderLogicAgents firstOrderAgent;
 	Queue<Vehicle> laneQueue = new LinkedList<>();
@@ -24,13 +27,40 @@ public class Lane {
 		
 	}
 	
+	public double getAverageWaitTime (int currentTime){
+		double average = 0;
+		
+		int tempWaitTimeValue = 0;
+		int tempTotalVehicles = 0;
+		for (int i = 0; i < laneQueue.size(); i++) {
+		Vehicle currentVehicle = laneQueue.remove();
+		tempWaitTimeValue += (currentTime - currentVehicle.arrivalTime); //calculates the difference between arrival time and current time
+		laneQueue.add(currentVehicle);
+		tempTotalVehicles++;
+		
+		}
+		
+		for (int i = 0; i < trainQueue.size(); i++) {
+			Vehicle train = trainQueue.remove();
+			tempWaitTimeValue += (currentTime - train.arrivalTime); //calculates the difference between arrival time and current time
+			laneQueue.add(train);
+			tempTotalVehicles++;
+			
+			}
+		
+		
+		tempWaitTimeValue += totalWaitTime;
+		average = tempWaitTimeValue/numberOfVehicles;
+		System.out.println("Average wait time for "+laneName+ ": is "+ average);
+		return average;
+	}
+	
 	
 	public double calculateWaitTimeValue( int currentTime) {
 		if (laneQueue.size() == 0) {
 			return waitTimeValue = 0;
 		}
 		//takes the arrivial time of first car squares it and divides by the number of cars
-		//waitTimeValue = Math.pow((currentTime - laneQueue.peek().arrivalTime) , 2)/laneQueue.size();
 		
 		//this cycles through the queue adding the total wait times for each vehicle
 		waitTimeValue = 0;
@@ -38,6 +68,13 @@ public class Lane {
 		Vehicle currentVehicle = laneQueue.remove();
 		waitTimeValue += (currentTime - currentVehicle.arrivalTime); //calculates the difference between arrival time and current time
 		laneQueue.add(currentVehicle);
+		}
+		
+		waitTimeValue = 0;
+		for (int i = 0; i < trainQueue.size(); i++) {
+		The_T currentVehicle = trainQueue.remove();
+		waitTimeValue += (currentTime - currentVehicle.arrivalTime); //calculates the difference between arrival time and current time
+		trainQueue.add(currentVehicle);
 		}
 		
 		//cycles through the pedestrian queue and adds wait times, but each pedestrian is worth less than a car
@@ -155,6 +192,26 @@ public class Lane {
 
 	public void setHasPedestrians(boolean hasPedestrians) {
 		this.hasPedestrians = hasPedestrians;
+	}
+
+
+	public int getNumberOfVehicles() {
+		return numberOfVehicles;
+	}
+
+
+	public void setNumberOfVehicles(int numberOfVehicles) {
+		this.numberOfVehicles = numberOfVehicles;
+	}
+
+
+	public int getTotalWaitTime() {
+		return totalWaitTime;
+	}
+
+
+	public void setTotalWaitTime(int totalWaitTime) {
+		this.totalWaitTime = totalWaitTime;
 	}
 	
 }

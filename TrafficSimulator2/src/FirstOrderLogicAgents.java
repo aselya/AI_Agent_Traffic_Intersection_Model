@@ -1,6 +1,6 @@
 public class FirstOrderLogicAgents {
- /*
-  * The goal of this is to simulate how an intersection operating through autonomous agents
+ 
+  /** The goal of this is to simulate how an intersection operating through autonomous agents
   * Perceiving their environment and acting on a series of first order logic rules
   * 
   * First order logic assumptions
@@ -81,8 +81,8 @@ public class FirstOrderLogicAgents {
   * Rule concerning how a straight lane can not cross a green or yellow left lane
   * 		if a left lane is not red 
   * 		L_initial(red) ∧ ¬L_acrossLeft(red) ∧ ¬L_adjacentRightTurn(red) ∧ ¬L_adjacentLeftTurn(red)  ⇒ L_initial(red)
-  * Method that implements this rule: noStraightAgainstLeft()
-  */
+  * Method that implements this rule: noStraightAgainstLeft()*/
+  
 
  Lane lane;
  Lane across;
