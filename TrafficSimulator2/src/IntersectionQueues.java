@@ -102,11 +102,11 @@ public class IntersectionQueues {
 	
 	public void addRandomAmountOfTrafficToALane( Lane lane, int time, boolean rushHour  ) {
 		Random rand = new Random();
-		int maxCarsAdded = 4;
+		int maxCarsAdded = 3;
 		if (rushHour = true){
-			maxCarsAdded = 8;
+			maxCarsAdded = 6;
 		}
-		
+		//int carsAdded = 2;
 		int carsAdded  = rand.nextInt(maxCarsAdded);
 		for (int i= 0; i < carsAdded; i ++) {
 			Vehicle newVehicle = new Vehicle(carIDtracker, time);

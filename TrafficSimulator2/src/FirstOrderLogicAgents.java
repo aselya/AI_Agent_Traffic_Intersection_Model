@@ -81,7 +81,10 @@ public class FirstOrderLogicAgents {
   * Rule concerning how a straight lane can not cross a green or yellow left lane
   * 		if a left lane is not red 
   * 		L_initial(red) ∧ ¬L_acrossLeft(red) ∧ ¬L_adjacentRightTurn(red) ∧ ¬L_adjacentLeftTurn(red)  ⇒ L_initial(red)
-  * Method that implements this rule: noStraightAgainstLeft()*/
+  * Method that implements this rule: noStraightAgainstLeft()
+  * 
+  * 
+  * */
   
 
  Lane lane;
@@ -107,6 +110,7 @@ public class FirstOrderLogicAgents {
   systemTime = time;
   
   //if a change has already been made do not make another
+  //∀ Lanes: lightChangedThisTurn(True) ⇒ ¬(Lanes(changeToNextColor))
   if (lane.getActionTakenThisTurn() == true) {
    System.out.println(lane.laneName + " : change made by other lanes already");
    return;

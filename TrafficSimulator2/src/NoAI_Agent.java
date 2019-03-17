@@ -3,13 +3,11 @@ public class NoAI_Agent {
 	
 	/*
 	 * This class is used to show what happens when there is no AI agent
-	 * 
-	 * 
-	 * 
 	 */
 	
 	
 	//simulation is set to start with north and south straight both green
+	//so this class also makes that assumption
 	int turn =0;
 	Lane[] lanesArray;
 	
@@ -40,8 +38,6 @@ public class NoAI_Agent {
 		}
 				
 	}
-	
-	
 	
 	
 	public void changeLanePair (Lane lane1, Lane lane2){
