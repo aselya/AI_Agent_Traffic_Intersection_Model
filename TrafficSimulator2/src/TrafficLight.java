@@ -1,4 +1,4 @@
-
+//stores the traffic light 
 public class TrafficLight {
 	LightColor currentColor;
 	int numberOfLanes;

@@ -1,5 +1,7 @@
-import java.util.LinkedList; 
-import java.util.Queue; 
+/*
+ * Stores the intersection
+ * Currently set to st paul/ commonwealth
+ */
 import java.util.Random;
 
 public class IntersectionQueues {
@@ -34,40 +36,7 @@ public class IntersectionQueues {
 		
 		
 	}
-	
-	public void removePeopleFromLane(Lane lane) {
-		int peopleCrossed = 0;
-		while (lane.getPedestrianQueue().size()> 0) {
-			lane.getPedestrianQueue().poll();
-			peopleCrossed ++;
-		}
-		System.out.println(peopleCrossed+ ": People have crossed");
-	}
-	
-	public void removeVehiclesFromLane (Lane lane, int cycleTime) {
-		removePeopleFromLane(lane);
-		for (int i = 0; i < cycleTime/2; i ++) { //it takes about 2 seconds for a vehicle to cross an intersection
-				//System.out.println("first vehicle in queue:"+lane.getLaneQueue().peek().id);
-				//System.out.println("lane size before removal:"+lane.getLaneQueue().size());
-			
-			if(lane.getTrainQueue().size()> 0) {
-				lane.getTrainQueue().poll();
-				System.out.println("Train departed");
-			}
-			
-			lane.getLaneQueue().poll();
-			if (lane.getLaneQueue().size()>0) {
-				System.out.println("new first vehicle in queue:"+lane.getLaneQueue().peek().id);
-				System.out.println("lane size after removal:"+lane.getLaneQueue().size());
-			}else {
-					System.out.println("lane is empty");
-				break;
-			}
-		}
-		//removing the people from the lane too
-		
-		
-	}
+
 	
 	public void addRandomAmountOfPeopleToALane( Lane lane , int time, boolean rushHour  ) {
 		Random rand = new Random();
@@ -102,9 +71,9 @@ public class IntersectionQueues {
 	
 	public void addRandomAmountOfTrafficToALane( Lane lane, int time, boolean rushHour  ) {
 		Random rand = new Random();
-		int maxCarsAdded = 3;
+		int maxCarsAdded = 2;
 		if (rushHour = true){
-			maxCarsAdded = 6;
+			maxCarsAdded =4;
 		}
 		//int carsAdded = 2;
 		int carsAdded  = rand.nextInt(maxCarsAdded);

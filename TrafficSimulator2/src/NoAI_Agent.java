@@ -2,12 +2,9 @@
 public class NoAI_Agent {
 	
 	/*
-	 * This class is used to show what happens when there is no AI agent
+	 * This class is used to implement what happens when there is no AI agent
+	 * 
 	 */
-	
-	
-	//simulation is set to start with north and south straight both green
-	//so this class also makes that assumption
 	int turn =0;
 	Lane[] lanesArray;
 	
@@ -15,7 +12,7 @@ public class NoAI_Agent {
 	public NoAI_Agent(Lane[] lanes){
 		lanesArray = lanes;
 	}
-	
+	// makes light change and removes the vehicles when lane is green
 	public void controlFlow(Lane lane1,Lane lane2, int systemTime){
 		changeLanePair (lane1, lane2);
 		
@@ -35,17 +32,16 @@ public class NoAI_Agent {
 			}
 		}
 		}
-		}
-				
+		}			
 	}
 	
-	
+	//intitiates the scheduled lane change
 	public void changeLanePair (Lane lane1, Lane lane2){
 		changeToNextColor(lane1);
 		changeToNextColor(lane2);	
 	}
 	
-	//changes the light to the next color
+	//changes the light to the next color using first order logic
 	 public boolean changeToNextColor(Lane laneToChange) {
 	 
 	  if (laneToChange.laneLight.currentColor.equals(LightColor.green)) {

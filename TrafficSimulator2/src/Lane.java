@@ -5,20 +5,24 @@ public class Lane {
 	String laneName;
 	int numberOfVehicles;
 	int totalWaitTime;
+	
 	double averageWaitTime = 0;
 	double waitTimeValue = 0;
+	
 	boolean actionTakenThisTurn;
 	boolean leftTurnLane;
 	boolean hasPedestrians;
+	
 	TrafficLight laneLight;
 	FirstOrderLogicAgents firstOrderAgent;
+	
 	Queue<Vehicle> laneQueue = new LinkedList<>();
 	Queue<The_T> trainQueue = new LinkedList<>();
 	Queue<Pedestrians> pedestrianQueue = new LinkedList<>();
 	
 	
 	
-	
+	//builds lane
 	public Lane (String title, boolean left, boolean pedestrians) {
 		laneName = title;
 		hasPedestrians = pedestrians;
@@ -29,26 +33,24 @@ public class Lane {
 	
 	public double getAverageWaitTime (int currentTime){
 		double average = 0;
-		
+
 		int tempWaitTimeValue = 0;
-		int tempTotalVehicles = 0;
+		//gets current wait in queue
 		for (int i = 0; i < laneQueue.size(); i++) {
 		Vehicle currentVehicle = laneQueue.remove();
 		tempWaitTimeValue += (currentTime - currentVehicle.arrivalTime); //calculates the difference between arrival time and current time
 		laneQueue.add(currentVehicle);
-		tempTotalVehicles++;
 		
 		}
-		
+		//adds train time
 		for (int i = 0; i < trainQueue.size(); i++) {
 			Vehicle train = trainQueue.remove();
 			tempWaitTimeValue += (currentTime - train.arrivalTime); //calculates the difference between arrival time and current time
 			laneQueue.add(train);
-			tempTotalVehicles++;
 			
 			}
 		
-		
+		//use temp value to avoid resetting
 		tempWaitTimeValue += totalWaitTime;
 		average = tempWaitTimeValue/numberOfVehicles;
 		System.out.println("Average wait time for "+laneName+ ": is "+ average);
@@ -57,6 +59,7 @@ public class Lane {
 	
 	
 	public double calculateWaitTimeValue( int currentTime) {
+		//base case
 		if (laneQueue.size() == 0) {
 			return waitTimeValue = 0;
 		}
