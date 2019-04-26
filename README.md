@@ -1,4 +1,4 @@
-This program contains two simulations of the St. Paul and Commonwealth Ave intersection
+This program contains two simulations of the St. Paul and Commonwealth Ave intersection\n
 One Simulation, uses a pre-programmed pattern to change the lights
 The other uses a series of agents using first order logic rules to change the lights
 
